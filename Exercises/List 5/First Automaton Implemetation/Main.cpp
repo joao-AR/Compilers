@@ -9,7 +9,14 @@ bool verificaEstadoAceito(char caractere){
 }
 
 bool verificaLetra(char caractere){
-    if(caractere == 'a' || caractere == 'b' || caractere == 'c'||  caractere == 'd' ){
+    if(
+           caractere == 'a' || caractere == 'b' || caractere == 'c'||  caractere == 'd'
+        || caractere == 'e' || caractere == 'f' || caractere == 'g'||  caractere == 'h'
+        || caractere == 'i' || caractere == 'j' || caractere == 'k'||  caractere == 'l'
+        || caractere == 'm' || caractere == 'n' || caractere == 'o'||  caractere == 'p'
+        || caractere == 'q' || caractere == 'r' || caractere == 's'||  caractere == 't'
+        || caractere == 'u' || caractere == 'v' || caractere == 'w'||  caractere == 'x' 
+        || caractere == 'y' || caractere == 'z'){
         return true;
     }
     return false;
@@ -24,12 +31,26 @@ int getColunaEntrada(char entrada){
         return 2;
     }
 }
+
+bool verificaEntradaAceito(char entrada){
+    if(entrada == '+'){
+        return true;
+    }else if(entrada == '-'){
+        return true;
+    }else if(verificaLetra(entrada)){
+        return true;
+    }
+    return false;
+}
+
 void imprimeResultado(std::string saida, int lastFinal){
-    std::cout << "Entrada > "; 
-    std::cout << saida;
-    std::cout << " < Reconhecida no estado "; 
-    std::cout << lastFinal; 
-    std::cout << "\n ";
+    if(saida != " "){
+        std::cout << "Entrada > "; 
+        std::cout << saida;
+        std::cout << " < Reconhecida no estado "; 
+        std::cout << lastFinal; 
+        std::cout << "\n ";
+    }
 }
 
 int main(){
@@ -48,7 +69,7 @@ int main(){
 
 
     int estadosFinais[] = {2,3,4,5,8};
-    std::string entrada = "+-dbdabc";
+    std::string entrada = "+-abcabc@ abc fgh";
     std::string saida;
     std::string auxSaida;
 
@@ -62,40 +83,57 @@ int main(){
     size_t tamanhoEntrada = entrada.size();
     int posiNaEntrada = 0;
     
-    while(posiNaEntrada < tamanhoEntrada){
-
-        if(novaLetra){
-            auxSaida = auxSaida + entrada[posiNaEntrada];
+    while(posiNaEntrada <= tamanhoEntrada){
+        auxSaida = novaLetra ? auxSaida + entrada[posiNaEntrada] : auxSaida;
+        char ultimoCaractere = auxSaida.back();
+        std::cout << "estado atual >>";
+        std::cout << currentState;
+        std::cout << "\n ";
+        isAceito = verificaEntradaAceito(ultimoCaractere);
+        
+        if(!isAceito ){
+            imprimeResultado(saida, lastFinal);
+            // imprimir a string aceita anterior ao erro 
+            if(posiNaEntrada >= tamanhoEntrada){ // erro imprimir erro  no fim ao final da string
+                break;
+            }
+            std::cout << "ERRO";
+            std::cout << "\n";
+            saida = "";
+            lastFinal = 0; 
+            currentState = 1;
+            posiNaEntrada++;
+            std::cout << "estado atual213 >>";
+            std::cout << currentState;
+            std::cout << "\n ";
+            auxSaida = entrada[posiNaEntrada];
+            char ultimoCaractere = auxSaida.back();
         }
     
-        char ultimoCaractere = auxSaida.back();
-        isAceito = verificaEstadoAceito(ultimoCaractere);
-        
-        if(isAceito){
-            
-            int colunaEntrada = getColunaEntrada(ultimoCaractere);
+        int colunaEntrada = getColunaEntrada(ultimoCaractere);
+        if(isAceito ){    
             currentState = automato [currentState][colunaEntrada];
-            isEstadoFinal = std::find(std::begin(estadosFinais), std::end(estadosFinais), currentState) != std::end(estadosFinais);
-            lastFinal = isEstadoFinal ? currentState : lastFinal;
+        }
+        isEstadoFinal = std::find(std::begin(estadosFinais), std::end(estadosFinais), currentState) != std::end(estadosFinais);
+        lastFinal = isEstadoFinal ? currentState : lastFinal;
 
-            if(currentState == 0 ){
-                    imprimeResultado(saida, lastFinal);
-                    auxSaida = ultimoCaractere;
-                    saida = "";
-                    lastFinal  = 0; 
-                    currentState = 1;
-                    novaLetra = false;
-                }else{
-                    saida = auxSaida;
-                    novaLetra = true;
-                    posiNaEntrada++;
-                }
-        }   
+        if(currentState == 0 && isAceito){
+                imprimeResultado(saida, lastFinal);
+                auxSaida = ultimoCaractere;
+                saida = "";
+                lastFinal = 0; 
+                currentState = 1;
+                novaLetra = false;
+            }else if( posiNaEntrada == tamanhoEntrada && isAceito){
+                saida = auxSaida;
+                imprimeResultado(saida, lastFinal); // imprime a ultima entrada reconhecido 
+                break;
+            }else{
+                saida = auxSaida;
+                novaLetra = true;
+                posiNaEntrada++;
+            }
     }
-
-    saida = auxSaida;
-    imprimeResultado(saida, lastFinal); // imprime a ultima entrada reconhecido 
-
 
     
     return 0; 
