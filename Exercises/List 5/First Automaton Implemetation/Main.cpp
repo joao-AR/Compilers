@@ -8,8 +8,12 @@ bool isNumero(char entrada);
 bool isEntradaAceita(char entrada);
 int getColunaEntrada(char entrada);
 void printResultado(std::string saida, int lastFinal);
-bool erro(int lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada);
-
+bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada);
+void resetAutomato(int &lastFinal, int &currentState, std::string &auxSaida, char ultimoCaractere){
+    lastFinal  = 0; 
+    currentState = 1;
+    auxSaida = ultimoCaractere;
+}
 int main(){
     
     // std::string entradasAceitas[] = {"+","-","a-z","0-9","e"};
@@ -29,10 +33,8 @@ int main(){
 
     int estadosFinais[] = {2,3,4,5,8};
     std::string entrada;
-    entrada = "+-abcabc @abc fgh";
+    entrada = "+-abcabc @abcfgh";
     
-    // std::cout << entrada;
-    // return 0;
     // std::cout << "Digite a sua entrada >> ";
     // std::getline(std::cin,entrada);
     
@@ -42,7 +44,7 @@ int main(){
     int  lastFinal  = 0; 
     int  currentState = 1;
 
-    bool isAceito;
+    bool isAceito = false;
     bool isEstadoFinal;
     bool novaLetra = true;
     bool stop = false;
@@ -52,11 +54,16 @@ int main(){
 
     while(posiNaEntrada <= tamanhoEntrada){
         auxSaida = novaLetra ? auxSaida + entrada[posiNaEntrada] : auxSaida;
+
         char ultimoCaractere = auxSaida.back();
         isAceito = isEntradaAceita(ultimoCaractere);
-        if(!isAceito){ 
+        
+        while (isAceito != true){
+            isAceito = isEntradaAceita(ultimoCaractere);
+            if(!isAceito ){ 
             stop = erro(lastFinal,saida,currentState,posiNaEntrada,auxSaida,ultimoCaractere,tamanhoEntrada,entrada);  
             if(stop){break;}
+            }
         }
     
         int colunaEntrada = getColunaEntrada(ultimoCaractere);
@@ -71,9 +78,7 @@ int main(){
         if(isAceito && currentState == 0 && lastFinal !=0){
                 printResultado(saida, lastFinal);
                 auxSaida = ultimoCaractere;
-                saida = "";
-                lastFinal = 0; 
-                currentState = 1;
+                resetAutomato(lastFinal,currentState,auxSaida, ultimoCaractere);
                 novaLetra = false;
             }else if( posiNaEntrada == tamanhoEntrada && isAceito){
                 saida = auxSaida;
@@ -94,7 +99,6 @@ int main(){
         }
     }
 
-    
     return 0; 
 }
 
@@ -159,7 +163,7 @@ void printResultado(std::string saida, int lastFinal){
     }
 }
 
-bool erro(int lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada){
+bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada){
             if(lastFinal != 0){printResultado(saida, lastFinal);}
             // imprimir a string aceita anterior ao erro 
             if(posiNaEntrada >= tamanhoEntrada){ // erro imprimir erro  no fim ao final da string
@@ -167,11 +171,13 @@ bool erro(int lastFinal,std::string &saida, int &currentState, int &posiNaEntrad
             }
             std::cout << "ERRO";
             std::cout << "\n";
+            
             saida = "";
             lastFinal = 0; 
             currentState = 1;
             posiNaEntrada++;
             auxSaida = entrada[posiNaEntrada];
             ultimoCaractere = auxSaida.back();
+            
             return false;
 }
