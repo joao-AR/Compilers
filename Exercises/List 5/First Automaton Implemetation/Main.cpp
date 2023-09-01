@@ -9,11 +9,8 @@ bool isEntradaAceita(char entrada);
 int getColunaEntrada(char entrada);
 void printResultado(std::string saida, int lastFinal);
 bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada);
-void resetAutomato(int &lastFinal, int &currentState, std::string &auxSaida, char ultimoCaractere){
-    lastFinal  = 0; 
-    currentState = 1;
-    auxSaida = ultimoCaractere;
-}
+void resetAutomato(int &lastFinal, int &currentState, std::string &auxSaida, char ultimoCaractere);
+
 int main(){
     
     // std::string entradasAceitas[] = {"+","-","a-z","0-9","e"};
@@ -33,7 +30,7 @@ int main(){
 
     int estadosFinais[] = {2,3,4,5,8};
     std::string entrada;
-    entrada = "+-abcabc @abcfgh";
+    entrada = "+-abcabc@ abc\nfgh";
     
     // std::cout << "Digite a sua entrada >> ";
     // std::getline(std::cin,entrada);
@@ -51,11 +48,17 @@ int main(){
     size_t tamanhoEntrada = entrada.size();
     int posiNaEntrada = 0;
     
-
+    char ultimoCaractere;
     while(posiNaEntrada <= tamanhoEntrada){
         auxSaida = novaLetra ? auxSaida + entrada[posiNaEntrada] : auxSaida;
-
-        char ultimoCaractere = auxSaida.back();
+        ultimoCaractere = auxSaida.back();
+        
+        if(ultimoCaractere == '\n'){ // iguinorar /n "pula linha"
+            posiNaEntrada++;
+            auxSaida = entrada[posiNaEntrada];
+            ultimoCaractere = auxSaida.back();
+        }
+        
         isAceito = isEntradaAceita(ultimoCaractere);
         
         while (isAceito != true){
@@ -102,11 +105,16 @@ int main(){
     return 0; 
 }
 
+void resetAutomato(int &lastFinal, int &currentState, std::string &auxSaida, char ultimoCaractere){
+    lastFinal  = 0; 
+    currentState = 1;
+    auxSaida = ultimoCaractere;
+}
 
 bool isLetra(char caractere){
     if(
            caractere == 'a' || caractere == 'b' || caractere == 'c'||  caractere == 'd'
-        || caractere == 'f' || caractere == 'g'||  caractere == 'h'
+        || caractere == 'e' || caractere == 'f' || caractere == 'g'||  caractere == 'h'
         || caractere == 'i' || caractere == 'j' || caractere == 'k'||  caractere == 'l'
         || caractere == 'm' || caractere == 'n' || caractere == 'o'||  caractere == 'p'
         || caractere == 'q' || caractere == 'r' || caractere == 's'||  caractere == 't'
