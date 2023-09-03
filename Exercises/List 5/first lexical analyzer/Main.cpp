@@ -9,7 +9,7 @@ int getColunaEntrada(char entrada, int currentState);
 void printResultado(std::string saida, int lastFinal);
 bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada);
 void resetAutomato(int &lastFinal, int &currentState, std::string &auxSaida, char ultimoCaractere);
-
+void imprimetoken(int lastfinal);
 int main(){
     // entradasAceitas = "i","f","a-h",j-z","a-e","g-z",a-z","0-9",".","-","\n","Blank","qualqueroutro"
     // ID = 2,4
@@ -39,9 +39,9 @@ int main(){
 
     int estadosFinais[] = {2,3,4,5,6,7,8,9,11,12,13};
     std::string entrada;
-    entrada = "chuchu teste ";
+    // entrada = "chuchu teste 123";
     
-    // std::getline(std::cin,entrada);
+    std::getline(std::cin,entrada);
     
     std::string saida;
     std::string auxSaida;
@@ -60,9 +60,10 @@ int main(){
     while(posiNaEntrada <= tamanhoEntrada){
         auxSaida = novaLetra ? auxSaida + entrada[posiNaEntrada] : auxSaida;
         ultimoCaractere = auxSaida.back();
-        // std::cout << auxSaida;
+        
         isAceito = isEntradaAceita(ultimoCaractere);
-        // while (isAceito != true){
+        
+        // while (isAceito != true){ // todo fix esta repetindo o ultimo
         //     isAceito = isEntradaAceita(ultimoCaractere);
         //     if(!isAceito ){ 
         //     stop = erro(lastFinal,saida,currentState,posiNaEntrada,auxSaida,ultimoCaractere,tamanhoEntrada,entrada);  
@@ -71,17 +72,9 @@ int main(){
         // }
 
         int colunaEntrada = getColunaEntrada(ultimoCaractere,currentState);
-        // std::cout << " colunaEntrada >> ";
-        // std::cout << colunaEntrada;
-        // std::cout << "\n";
-        
-        // std::cout << currentState;
-        // std::cout << "\n";
+        ;
         if(isAceito){    
             currentState = automato [currentState][colunaEntrada];
-            // std::cout << " novo current state >> ";
-            // std::cout << currentState;
-            // std::cout << "\n";
         }
         isEstadoFinal = std::find(std::begin(estadosFinais), std::end(estadosFinais), currentState) != std::end(estadosFinais);
         lastFinal = isEstadoFinal ? currentState : lastFinal;
@@ -158,13 +151,34 @@ int getColunaEntrada(char entrada, int currentState){
 
 
 void printResultado(std::string saida, int lastFinal){
-        std::cout << "Entrada > "; 
-        std::cout << saida;
-        std::cout << " < Reconhecida no estado "; 
-        std::cout << lastFinal; 
+        if(saida != " "){
+            std::cout << saida;
+            std::cout << " ";
+        }
+        imprimetoken(lastFinal);
         std::cout << "\n";
 }
 
+void imprimetoken(int lastfinal){
+    std::string token;
+    if(lastfinal == 2 ||  lastfinal == 4){
+        token = "ID";
+    }else if(lastfinal == 3){
+        token = "IF";
+    }else if(lastfinal == 5 || lastfinal == 9 || lastfinal == 13 ){
+        token = "error";
+    }else if(lastfinal == 6 || lastfinal == 8 ){
+        token = "Real";
+    }else if(lastfinal == 7){
+        token = "NUM";
+    }else if(lastfinal == 11){
+        token = "commet";
+    }else if(lastfinal == 12){
+        token = "white space";
+    }
+
+    std::cout << token ;
+}   
 bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada){
             if(lastFinal != 0){printResultado(saida, lastFinal);}
             // imprimir a string aceita anterior ao erro 

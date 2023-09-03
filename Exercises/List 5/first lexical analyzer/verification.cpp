@@ -63,7 +63,7 @@ bool isNumero(char entrada){
 }
 
 bool isEntradaAceita(char entrada){
-    if(isLetra(entrada) || isNumero(entrada) || entrada == ' '){
+    if(isLetra(entrada) || isNumero(entrada) || entrada == ' ' || entrada == '.' || entrada == '\n' || entrada == '-'){
         return true;
     }
     return false;
