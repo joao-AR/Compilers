@@ -37,9 +37,9 @@ int main(){
     };
 
 
-    int estadosFinais[] = {2,3,4,5,8};
+    int estadosFinais[] = {2,3,4,5,6,7,8,9,11,12,13};
     std::string entrada;
-    entrada = "chuchu ";
+    entrada = "chuchu teste ";
     
     // std::getline(std::cin,entrada);
     
@@ -60,53 +60,58 @@ int main(){
     while(posiNaEntrada <= tamanhoEntrada){
         auxSaida = novaLetra ? auxSaida + entrada[posiNaEntrada] : auxSaida;
         ultimoCaractere = auxSaida.back();
-        
-        isAceito = isEntradaAceita(ultimoCaractere);
-        while (isAceito != true){
-            isAceito = isEntradaAceita(ultimoCaractere);
-            if(!isAceito ){ 
-            stop = erro(lastFinal,saida,currentState,posiNaEntrada,auxSaida,ultimoCaractere,tamanhoEntrada,entrada);  
-            if(stop){break;}
-            }
-        }
-        // std::cout << "\n";
-        // std::cout << " auxSaida >> ";
         // std::cout << auxSaida;
+        isAceito = isEntradaAceita(ultimoCaractere);
+        // while (isAceito != true){
+        //     isAceito = isEntradaAceita(ultimoCaractere);
+        //     if(!isAceito ){ 
+        //     stop = erro(lastFinal,saida,currentState,posiNaEntrada,auxSaida,ultimoCaractere,tamanhoEntrada,entrada);  
+        //     if(stop){break;}
+        //     }
+        // }
+
         int colunaEntrada = getColunaEntrada(ultimoCaractere,currentState);
-        // std::cout << "\n";
-        // std::cout << " posiNaEntrada >> ";
-        // std::cout << posiNaEntrada;
-        // std::cout << "\n";
-        
         // std::cout << " colunaEntrada >> ";
         // std::cout << colunaEntrada;
-          std::cout << "\n";
-        if(isAceito ){    
-            // std::cout << " currentState >> ";
+        // std::cout << "\n";
+        
+        // std::cout << currentState;
+        // std::cout << "\n";
+        if(isAceito){    
+            currentState = automato [currentState][colunaEntrada];
+            // std::cout << " novo current state >> ";
             // std::cout << currentState;
             // std::cout << "\n";
-            currentState = automato [currentState][colunaEntrada];
         }
-
         isEstadoFinal = std::find(std::begin(estadosFinais), std::end(estadosFinais), currentState) != std::end(estadosFinais);
         lastFinal = isEstadoFinal ? currentState : lastFinal;
-
+        
         if(isAceito && currentState == 0 && lastFinal != 0){
-                printResultado(saida, lastFinal);
-                auxSaida = ultimoCaractere;
-                resetAutomato(lastFinal,currentState,auxSaida, ultimoCaractere);
-                novaLetra = false;
-            }else if( posiNaEntrada == tamanhoEntrada && isAceito){
-                saida = auxSaida;
-                printResultado(saida, lastFinal); // imprime a ultima entrada reconhecido 
-                break;
-            }else if(lastFinal != 0 && currentState != 0 ){
-                saida = auxSaida;
-                novaLetra = true;
-                posiNaEntrada++;
-            }
+            printResultado(saida, lastFinal);
+            auxSaida = ultimoCaractere;
+            resetAutomato(lastFinal,currentState,auxSaida, ultimoCaractere);
+            novaLetra = false;
 
+        }else if( posiNaEntrada == tamanhoEntrada ){
+            saida = auxSaida;
+            printResultado(saida, lastFinal); // imprime a ultima entrada reconhecida
+            break;
+        
+        }else if(lastFinal != 0 && currentState != 0 ){
+            saida = auxSaida;
+            novaLetra = true;
+            posiNaEntrada++;
+        }
+
+     if(lastFinal == 0 && currentState == 0){ // verificação de erro caso a primeira entrada não seja aceita 
+            stop = erro(lastFinal,saida,currentState,posiNaEntrada,auxSaida,ultimoCaractere,tamanhoEntrada,entrada);  
+            if(stop){
+                break;
+            }
+            novaLetra = false;
+        }
     }
+
 
     return 0; 
 }
@@ -116,8 +121,6 @@ void resetAutomato(int &lastFinal, int &currentState, std::string &auxSaida, cha
     currentState = 1;
     auxSaida = ultimoCaractere;
 }
-
- 
 
 int getColunaEntrada(char entrada, int currentState){
 
@@ -155,13 +158,11 @@ int getColunaEntrada(char entrada, int currentState){
 
 
 void printResultado(std::string saida, int lastFinal){
-    if(saida != " "){
         std::cout << "Entrada > "; 
         std::cout << saida;
         std::cout << " < Reconhecida no estado "; 
         std::cout << lastFinal; 
         std::cout << "\n";
-    }
 }
 
 bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada){

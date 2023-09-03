@@ -54,13 +54,13 @@ bool isGz(char caractere){
     }
     return false;
 }
+
 bool isNumero(char entrada){
     if(entrada == '0' || entrada == '1' || entrada == '2' ||  entrada == '3' ||entrada == '4'  || entrada == '5' || entrada == '6' ||  entrada == '7' || entrada == '8' || entrada == '9' ){
     return true;
     }    
     return false;
 }
-
 
 bool isEntradaAceita(char entrada){
     if(isLetra(entrada) || isNumero(entrada) || entrada == ' '){
