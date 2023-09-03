@@ -144,6 +144,7 @@ int getColunaEntrada(char entrada){
     }else if(isNumero(entrada)){
         return 3;
     }
+    return -1;
 }
 
 bool isEntradaAceita(char entrada){
@@ -163,10 +164,10 @@ bool isEntradaAceita(char entrada){
 
 void printResultado(std::string saida, int lastFinal){
     if(saida != " "){
-        std::cout << "Entrada > "; 
+        // std::cout << "Entrada > "; 
         std::cout << saida;
-        std::cout << " < Reconhecida no estado "; 
-        std::cout << lastFinal; 
+        // std::cout << " < Reconhecida no estado "; 
+        // std::cout << lastFinal; 
         std::cout << "\n ";
     }
 }
