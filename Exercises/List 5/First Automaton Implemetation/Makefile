@@ -1,7 +1,7 @@
 Main: Main.o
 	g++ Main.o -o Main
 
-Main.o: main.cpp
+Main.o: Main.cpp
 	g++ -c Main.cpp
 
 clean: 

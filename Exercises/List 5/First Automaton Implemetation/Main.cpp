@@ -30,10 +30,9 @@ int main(){
 
     int estadosFinais[] = {2,3,4,5,8};
     std::string entrada;
-    entrada = "+-abcabc@ abc\nfgh";
+    // entrada = "+-abcabc@ abc\nfgh";
     
-    // std::cout << "Digite a sua entrada >> ";
-    // std::getline(std::cin,entrada);
+    std::getline(std::cin,entrada);
     
     std::string saida;
     std::string auxSaida;
@@ -168,7 +167,7 @@ void printResultado(std::string saida, int lastFinal){
         std::cout << saida;
         // std::cout << " < Reconhecida no estado "; 
         // std::cout << lastFinal; 
-        std::cout << "\n ";
+        std::cout << "\n";
     }
 }
 
