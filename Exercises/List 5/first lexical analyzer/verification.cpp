@@ -4,6 +4,7 @@
 #include <algorithm>  // Para a função std::find
 
 bool isLetra(char caractere){
+
     if(
            caractere == 'a' || caractere == 'b' || caractere == 'c'||  caractere == 'd'
         || caractere == 'e' || caractere == 'f' || caractere == 'g'||  caractere == 'h'
@@ -12,8 +13,10 @@ bool isLetra(char caractere){
         || caractere == 'q' || caractere == 'r' || caractere == 's'||  caractere == 't'
         || caractere == 'u' || caractere == 'v' || caractere == 'w'||  caractere == 'x' 
         || caractere == 'y' || caractere == 'z'){
+        //std::cout << caractere << " eh letra \n";
         return true;
     }
+    //std::cout << caractere << " nao letra \n";
     return false;
 }
 bool isAh(char caractere){
@@ -64,7 +67,9 @@ bool isNumero(char entrada){
 
 bool isEntradaAceita(char entrada){
     if(isLetra(entrada) || isNumero(entrada) || entrada == ' ' || entrada == '.' || entrada == '\n' || entrada == '-'){
+        //std::cout << "aceito ";
         return true;
     }
+   // std::cout << "Nao aceito ";
     return false;
 }

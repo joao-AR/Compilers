@@ -10,6 +10,7 @@ void printResultado(std::string saida, int lastFinal);
 bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada);
 void resetAutomato(int &lastFinal, int &currentState, std::string &auxSaida, char ultimoCaractere);
 void imprimetoken(int lastfinal);
+
 int main(){
     // entradasAceitas = "i","f","a-h",j-z","a-e","g-z",a-z","0-9",".","-","\n","Blank","qualqueroutro"
     // ID = 2,4
@@ -19,21 +20,21 @@ int main(){
     //real = 6,8
     //num = 7
     //comment = 11
-    int automato [][13] = {
-    /*estado 0*/ {0,0,0,0,0,0,0,0,0,0,0,0,0},
-    /*estado 1*/ {2,0,4,4,0,0,0,7,5,9,0,12,13},
-    /*estado 2*/ {0,3,0,0,4,4,0,4,0,0,0,0,0},
-    /*estado 3*/ {0,0,0,0,0,0,4,4,0,0,0,0,0},
-    /*estado 4*/ {0,0,0,0,0,0,4,4,0,0,0,0,0},
-    /*estado 5*/ {0,0,0,0,0,0,0,6,0,0,0,0,0},
-    /*estado 6*/ {0,0,0,0,0,0,0,6,0,0,0,0,0},
-    /*estado 7*/ {0,0,0,0,0,0,0,7,8,0,0,0,0},
-    /*estado 8*/ {0,0,0,0,0,0,0,8,0,0,0,0,0},
-    /*estado 9*/ {0,0,0,0,0,0,0,0,0,10,0,0,0},
-    /*estado 10*/{0,0,0,0,0,0,10,0,0,0,11,0,0},
-    /*estado 11*/{0,0,0,0,0,0,0,0,0,0,0,0,0},
-    /*estado 12*/{0,0,0,0,0,0,0,0,0,0,0,12,0},
-    /*estado 13*/{0,0,0,0,0,0,0,0,0,0,0,0,0},
+    int automato [][14] = {
+    /*estado 0*/ {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    /*estado 1*/ {2,0,4,4,0,0,0,7,5,9,0,12,13,0},
+    /*estado 2*/ {0,3,0,0,4,4,0,4,0,0,0,0,0,0},
+    /*estado 3*/ {0,0,0,0,0,0,4,4,0,0,0,0,0,0},
+    /*estado 4*/ {0,0,0,0,0,0,4,4,0,0,0,0,0,0},
+    /*estado 5*/ {0,0,0,0,0,0,0,6,0,0,0,0,0,0},
+    /*estado 6*/ {0,0,0,0,0,0,0,6,0,0,0,0,0,0},
+    /*estado 7*/ {0,0,0,0,0,0,0,7,8,0,0,0,0,0},
+    /*estado 8*/ {0,0,0,0,0,0,0,8,0,0,0,0,0,0},
+    /*estado 9*/ {0,0,0,0,0,0,0,0,0,10,0,0,0,0},
+    /*estado 10*/{0,0,0,0,0,0,10,0,0,0,11,0,0,0},
+    /*estado 11*/{0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    /*estado 12*/{0,0,0,0,0,0,0,0,0,0,0,12,0,0},
+    /*estado 13*/{0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     };
 
 
@@ -60,9 +61,8 @@ int main(){
     while(posiNaEntrada <= tamanhoEntrada){
         auxSaida = novaLetra ? auxSaida + entrada[posiNaEntrada] : auxSaida;
         ultimoCaractere = auxSaida.back();
-        
         isAceito = isEntradaAceita(ultimoCaractere);
-        
+        std::cout << "ultimo char" <<  ultimoCaractere << "\n"; 
         // while (isAceito != true){ // todo fix esta repetindo o ultimo
         //     isAceito = isEntradaAceita(ultimoCaractere);
         //     if(!isAceito ){ 
@@ -72,11 +72,13 @@ int main(){
         // }
 
         int colunaEntrada = getColunaEntrada(ultimoCaractere,currentState);
-        ;
+        
         if(isAceito){    
             currentState = automato [currentState][colunaEntrada];
         }
+
         isEstadoFinal = std::find(std::begin(estadosFinais), std::end(estadosFinais), currentState) != std::end(estadosFinais);
+        
         lastFinal = isEstadoFinal ? currentState : lastFinal;
         
         if(isAceito && currentState == 0 && lastFinal != 0){
@@ -91,7 +93,11 @@ int main(){
             break;
         
         }else if(lastFinal != 0 && currentState != 0 ){
-            saida = auxSaida;
+            if(colunaEntrada != 13){
+                saida = auxSaida;
+            }else{
+                auxSaida = saida;
+            }
             novaLetra = true;
             posiNaEntrada++;
         }
@@ -143,10 +149,10 @@ int getColunaEntrada(char entrada, int currentState){
         return 10;
     }else if(entrada == ' '){
         return 11;
-    }else{
+    }else if(currentState == 1){
         return 12;
     }
-    return 0;
+    return 13;
 }
 
 
@@ -172,13 +178,14 @@ void imprimetoken(int lastfinal){
     }else if(lastfinal == 7){
         token = "NUM";
     }else if(lastfinal == 11){
-        token = "commet";
+        token = "comment";
     }else if(lastfinal == 12){
         token = "white space";
     }
 
     std::cout << token ;
-}   
+}
+
 bool erro(int &lastFinal,std::string &saida, int &currentState, int &posiNaEntrada, std::string &auxSaida, char &ultimoCaractere, int tamanhoEntrada,std::string entrada){
             if(lastFinal != 0){printResultado(saida, lastFinal);}
             // imprimir a string aceita anterior ao erro 
