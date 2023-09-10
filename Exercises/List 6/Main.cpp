@@ -55,7 +55,7 @@ bool verificaAceito(char c){
     }
 }
 void analisadorLexico(std::string stingEntrada,int automato [][11], bool haveNextLine){
-    //std::cout << "\n";
+    std::cout << "\n";
     int estadosFinais[] = {3,6,8,10,13,14,15,16,17,18,19,22};
 
     int posiString = 0;
@@ -87,69 +87,35 @@ void analisadorLexico(std::string stingEntrada,int automato [][11], bool haveNex
             lastFinal = isEstadoFinal ? currentState : lastFinal;
             
             auxSaida = novaLetra ? auxSaida + stingEntrada[posiString] : auxSaida;
+
             if(currentState == 0 && lastFinal != 0){
-                std::cout << "auxSaida1 >> " << saidaFinal << "\n";
-                auxSaida =  ultimoChar;
+                std::cout << "saidaFinal " << saidaFinal << " lastFinal " << lastFinal << "\n";
+
+                auxSaida = ultimoChar;
+                saidaFinal = "";
                 currentState = 1;
                 lastFinal = 0;
                 novaLetra = false;
-            }else if(posiString == tamanhoEntrada ){
-                std::cout << "auxSaida2 >> " << saidaFinal << "\n";
+            }else if(posiString+1 == tamanhoEntrada){
+                if(lastFinal != 0 ){
+                    saidaFinal = auxSaida;
+                    std::cout << "saidaFinal " << saidaFinal << " lastFinal " << lastFinal << "\n";
+                }else{
+                    std::cout << "ERRO";
+                }
                 break;
-                
             }else{
                 saidaFinal = auxSaida;
                 novaLetra = true;
                 posiString++;
             }
-        }else{
-            if(ultimoChar == ' '){
-                auxSaida =  ultimoChar;
-                currentState = 1;
-                lastFinal = 0;
-                posiString++;
-                novaLetra = true;
-            }else{
-                std::cout << "Não aceito \n";
-                novaLetra = true;
-                posiString++;
-            }
-        }
-        // std::cout << "ultimoChar >> " << ultimoChar <<"\n";
-        //posiString++;
-    }
-    // enquanto o input não acabar vai falzer o seguinte:
-
-//     verificar se é um caractere aceito pelo automato: 
-
-//         se for aceito:
-//             verificar qual a coluna do char:
-//                 retorna a coluna certa
-
-//             pegar tabela de estados
-//             linha vai ser o numero do estado atual
-//             coluna vai ser a coluna do caractere
-//             peagar NOVO estado atual 
-
-//             verificar se o estado autual é final: 
-//                 se for atualziar o lastFinal 
-
-//             verificar se o estado final não é zero, e o estado atual é zero (maior substring possivel):
-
-//             verificar se acabou a string de input:
-//                 imprimir a saida
-//                 encerrar o programa
             
-
-//             Se não acabou ainda a maior string possivel:
-//                 vai para o proximo caractere 
-//                 saida vai receber o ultimo caractere 
-
-
-//         se não for aceito:
-//             imprimir mensagem de erro
-//             ir para o proximo caractere
-
+        }else{
+            novaLetra = true;
+            saidaFinal = auxSaida;
+            posiString++;
+        }
+    }
 }
 
 
@@ -170,7 +136,7 @@ int main(){
     /*estado 8*/ {0,0,0,0,0,0,0,0,0,0,0},
     /*estado 9*/ {0,0,0,0,0,0,0,0,0,10,0},
     /*estado 10*/{0,0,0,0,0,0,0,0,0,0,0},
-    /*estado 11*/{0,0,0,11,0,0,0,0,0,0,0},
+    /*estado 11*/{0,0,0,12,0,0,0,0,0,0,0},
     /*estado 12*/{0,0,0,0,0,0,0,0,14,0,13},
     /*estado 13*/{0,0,0,0,0,0,0,0,0,15,0},
     /*estado 14*/{0,0,0,0,0,0,0,0,0,16,0},
