@@ -4,22 +4,6 @@
 #include <algorithm>  // Para a função std::find
 #include "./h/Verification.h"
 
-
-std::string getPalavra(std::string stingEntrada,int &posiString, int tamanhoEntrada){
-    char c;
-    std::string palavra;
-    while (stingEntrada[posiString  ] != ' '){
-        c = stingEntrada[posiString];
-        palavra = palavra + c;
-        posiString++;
-        if(posiString == tamanhoEntrada){
-            return palavra;
-        }
-    }
-    return palavra;
-}
-
-
 int getNovoEstadoAtual(int linhaEstado,int colunaEntrada,int automato [][41]){
     int NovoAtual;
     if(colunaEntrada == -1){
@@ -58,13 +42,7 @@ void analisadorLexico(std::string stingEntrada,int automato [][41], bool haveNex
     char ultimoChar;
     std::string palavra = "";
 
-    while(posiString <= tamanhoEntrada){
-        ultimoChar = stingEntrada[posiString];
-        palavra = getPalavra(stingEntrada,posiString,tamanhoEntrada);
-        verificaPalavraAceita(palavra,automato,haveNextLine);
-        posiString++;
-    }
-    
+    verificaPalavraAceita(stingEntrada,automato,haveNextLine);
 }
 
 void resetEstados(std::string &auxSaida,std::string &saida,int &currentState,int &lastFinal,bool &novaLetra,char c ,int tipoReset){
@@ -86,24 +64,26 @@ void resetEstados(std::string &auxSaida,std::string &saida,int &currentState,int
 void imprimeToken (int lastFinal){
 
     if(lastFinal == 2 ||  lastFinal == 4){
-        std::cout << "ID ";
+        std::cout << " ID\n";
     }else if(lastFinal == 3){
-        std::cout << "IF ";
+        std::cout << " IF\n";
     }else if(lastFinal == 5 || lastFinal == 9 || lastFinal == 13 ){
-        std::cout << "error ";
+        std::cout << " error\n";
     }else if(lastFinal == 6 || lastFinal == 8 ){
-        std::cout << "Real ";
+        std::cout << " Real\n";
     }else if(lastFinal == 7){
-        std::cout << "NUM ";
+        std::cout << " NUM\n";
     }else if(lastFinal == 11){
-        std::cout << "comment ";
+        std::cout << " comment\n";
     }else if(lastFinal == 12){
-        std::cout << "white space ";
+        std::cout << "white space\n";
     }
 }
 
 void imprimeSaida(std::string saida,int lastFinal){
+    if(lastFinal != 12){
+        std::cout << saida;
+    }
     imprimeToken(lastFinal);
-    std::cout << saida << "\n";
 }   
 
