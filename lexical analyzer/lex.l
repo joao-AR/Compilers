@@ -17,6 +17,7 @@ void incColumn(char* str){
 %}
 %option noyywrap
 %x comment
+%x string
 %%
 
 "void" { printf("VOID \n"); incColumn(yytext);}
@@ -104,6 +105,18 @@ void incColumn(char* str){
     BEGIN(INITIAL);}
 <comment>. {incColumn(yytext);}
 <comment>\n {incColumn(yytext); line++; column = 1;}
+
+["] {
+    BEGIN(string); 
+    printf("STRING(");
+}
+<string>["] {
+    incColumn(yytext); 
+    printf(")\n"); 
+    BEGIN(INITIAL);
+}
+<string>([^\\\"]|\\.)* { incColumn(yytext); printf("%s", yytext);}
+
 
 .   { printf("error:lexical:%d:%d: %s\n",line,column,yytext); incColumn(yytext);}
 
