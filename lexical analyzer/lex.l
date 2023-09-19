@@ -97,10 +97,17 @@ void incColumn(char* str){
 } //Caractere
 
 [0-9]+ {printf("NUM_INTEGER(%s)\n",yytext);  incColumn(yytext);}
-[_a-zA-Z]+[_a-zA-Z0-9]* {printf("IDENTIFIER(%s)\n",yytext);incColumn(yytext);}
-[\n] {line++; column = 1;}
-[\t] {/*iguinoara tabulação */}
+[_a-zA-Z]+[_a-zA-Z0-9]* {
+    if(strlen(yytext) <= 255){
+        printf("IDENTIFIER(%s)\n",yytext);
+    }else{
+        printf("error:lexical:%d:%d: identifier too long\n", line, column);
+    }
+    incColumn(yytext);
+    }
 
+[\n] {line++; column = 1;}
+[\t] {}// iguinorar tabulação
 "//".* {printf("comment\n"); line++;}
 "/*" {
     incColumn(yytext);
