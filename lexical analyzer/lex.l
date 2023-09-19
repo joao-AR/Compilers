@@ -84,6 +84,9 @@ void incColumn(char* str){
 "define" {printf("DEFINE\n");incColumn(yytext);}
 "exit" {printf("EXIT\n");incColumn(yytext);}
 
+0[xX][0-9a-fA-F]+ {printf("NUM_HEXA(%s)\n",yytext);incColumn(yytext); }
+0[1-7][0-7]* {printf("NUM_OCTAL(%s)\n", yytext); incColumn(yytext);}  
+
 
 [0-9]+ {printf("NUM_INTEGER(%s)\n",yytext);  incColumn(yytext);}
 [_a-zA-Z]+[_a-zA-Z0-9]* {printf("IDENTIFIER(%s)\n",yytext);incColumn(yytext);}
