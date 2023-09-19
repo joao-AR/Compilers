@@ -21,7 +21,7 @@ void incColumn(char* str){
 %x string
 %%
 
-"void" { if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("VOID "); incColumn(yytext);}
+"void" { if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("VOID"); incColumn(yytext);}
 "int" {if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("INT");incColumn(yytext);}
 "char" {if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("CHAR");incColumn(yytext);}
 
