@@ -6,7 +6,7 @@ int line = 1;
 int column = 1;
 int total_lines = 1;
 int comment_begin_line = 0;
-int comment_begin_colon = 0;
+int comment_begin_colomn = 0;
 int case_bar_n = 0;
 void incColumn(char* str){
     size_t stringSize = strlen(str);
@@ -103,7 +103,7 @@ void incColumn(char* str){
         }
 } //Caractere
 
-[0-9]+ {if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("NUM_INTEGER(%s)",yytext);  incColumn(yytext);}
+[0-9]+ { if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("NUM_INTEGER(%s)",yytext);  incColumn(yytext);}
 
 [_a-zA-Z]+[_a-zA-Z0-9]* {
     if(strlen(yytext) <= 255){
@@ -116,11 +116,16 @@ void incColumn(char* str){
 
 [\n] {line++; column = 1;}
 [\t] {}// iguinorar tabulação
-"//".* {if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("comment"); line++;}
+
+"//".* {
+    if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; }
+    line++; 
+    column = 1;
+}
 "/*" {
     incColumn(yytext);
     comment_begin_line = line; 
-    comment_begin_colon = column - 2; 
+    comment_begin_colomn = column - 2; 
     BEGIN(comment);
     }
 
@@ -130,27 +135,41 @@ void incColumn(char* str){
     comment_begin_line = 0; 
     BEGIN(INITIAL);}
 <comment>. {incColumn(yytext);}
-<comment>"/*". {
-    if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };printf("warning:%d:%d: '/*' within block comment",line,column);
-    line++;
+<comment>\*[^*/] {
+    if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };
+    printf("warning:%d:%d: '/*' within block comment",line,column-1);
     incColumn(yytext);
 }
-<comment>\n {incColumn(yytext); line++; column = 1;}
+
+<comment>"/*"[^*/]*"\n" {
+    if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };
+    printf("warning:%d:%d: '/*' within block comment",line,column);
+    
+    for(int i = 0; i < yyleng; i++){
+        if(yytext[i] == '\n'){
+            line++;
+        }
+    }
+    column = 1;
+}
+<comment>\n { line++; column = 1;}
+
 
 ["] {
+    if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };
     BEGIN(string); 
     printf("STRING(");
 }
 <string>["] {
     incColumn(yytext); 
     printf(")");
-    if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };
     BEGIN(INITIAL);
 }
-<string>([^\\\"]|\\.)* { if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; };  printf("%s", yytext); incColumn(yytext);}
+
+<string>([^\\\"]|\\.)* { printf("%s", yytext); incColumn(yytext);}
 
 
-.   { printf("error:lexical:%d:%d: %s",line,column,yytext); incColumn(yytext);}
+. { if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; }; printf("error:lexical:%d:%d: %s",line,column +1 ,yytext); incColumn(yytext);}
 
 %%
 
@@ -158,7 +177,7 @@ int main() {
     yylex();
     if(comment_begin_line != 0){
         if(case_bar_n == 1){ printf("\n"); }else{ case_bar_n = 1; }; 
-		printf("error:lexical:%d:%d: unterminated comment", comment_begin_line, comment_begin_colon);
+		printf("error:lexical:%d:%d: unterminated comment", comment_begin_line, comment_begin_colomn);
 	}
     return 0;
 }
