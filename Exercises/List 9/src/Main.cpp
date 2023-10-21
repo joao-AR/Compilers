@@ -11,6 +11,7 @@ int main(){
 
     int automaton[][ALPHABET_LENGTH] = {
                   /* char de entrada
+                  0   1   2   3   4   5   6   7   8   9   10  11  12  13  14 15  16  17  18  19  20  21  22   23  24  25  26 27   28
                   +   -   0   1   2   3   4   5   6   7   8   9   =   ;   d   e   f   g   h   i   t   n   l   s   b   p   r  \n   O
     /*estado 0*/  {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
     /*estado 1*/  {18,18, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 26, 25,  0,  6,  0,  0,  0,  2,  3,  0,  0,  0, 10, 14,  0, 28,  0},
@@ -49,10 +50,11 @@ int main(){
         while (true) {
             // Tenta ler uma linha da entrada padrão
             if (std::getline(std::cin, line)) {
+
                 // verificar se tem mais linhas 
 
                 haveNextLine = std::cin.peek() != EOF ?  haveNextLine = true : haveNextLine = false;
-
+                //std::cout << "linha:-: " << line << "\n";
                 // chamar a funcão que vai andar pelo automato
                 lexAnalyser(line,automaton,haveNextLine);
                 // Verifica se há mais uma linha disponível

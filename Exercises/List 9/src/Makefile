@@ -1,5 +1,5 @@
 Main: Main.o Verification.o Automaton.o
-	g++ Main.o Verification.o Automaton.o -o Main
+	g++ -g Main.o Verification.o Automaton.o -o Main
 
 Main.o: Main.cpp
 	g++ -c Main.cpp

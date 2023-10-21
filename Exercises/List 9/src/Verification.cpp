@@ -18,11 +18,27 @@ bool isLetterAccepted(char c){
 }
 
 bool isCharAccepted(char c){
-    if(c == '+'|| c == '-' || isNum(c)|| isLetterAccepted(c)){
+    if(c == '+'|| c == '-' ||c == '=' ||c == ';' || isNum(c)|| isLetterAccepted(c)){
         return true;
     }else{
         return false;
     }
+}
+
+void printAll(char word, int inputColumn,int currentState ,int lastFinal ,std::string output = "",bool char_acepted = false){
+    std::cout << "=======Debug======= \n";
+    std::cout << "word: " << word << "\n";
+    //if(inputColumn >= 0){
+        std::cout << "inputColumn: " << inputColumn << "\n";
+   // }else if(currentState >= 0){
+        std::cout << "currentState: " << currentState << "\n";
+    //}else if(lastFinal >= 0){
+        std::cout << "lastFinal: " << lastFinal << "\n";
+    //}else if(output != ""){
+        std::cout << "output: " << output << "\n";
+    //}
+    std::cout << "char_acepted: " << char_acepted << "\n";
+    std::cout << "=======Fim======= \n\n";
 }
 
 void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
@@ -37,13 +53,15 @@ void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
     int inputColumn;
     int currentState = 1;
     int lastFinal = 0;
-
+    
     bool isFinalState;
     bool newWord = true;
-    
+    //std::cout << "wordSize: " << wordSize << "\n"; 
     while(posi <= wordSize){
+        //std::cout << "posi: " << posi << "\n";
+        
+
         if(isCharAccepted(word[posi])){
-            //std::cout << word[posi] << " << c \n";
             inputColumn = getInputColumn(word[posi]);
             currentState = getNewCurrentState(currentState,inputColumn,automaton);
             
@@ -51,22 +69,27 @@ void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
             lastFinal = isFinalState ? currentState : lastFinal;
             
             auxOutput = newWord ? auxOutput + word[posi] : auxOutput;
+            //printAll(word[posi], inputColumn,currentState,lastFinal,output,isCharAccepted(word[posi]));
 
             if(currentState == 0 && lastFinal != 0){
+                //std::cout << "Entrou currentState == 0 && lastFinal != 0\n";
                 printOutput(output,lastFinal);
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
                 
             }else if(currentState == 0 && lastFinal == 0){
-                std::cout << "ERRO\n";
+                //std::cout << "Entrou currentState == 0 && lastFinal == 0\n";
+                std::cout << "ERRO \n";
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],1);
                 
             }else{
+                //std::cout << "Entrou Else \n";
                 output = auxOutput;
                 newWord = true;
                 posi++;
             }
             
         }else{
+            //std::cout << "char não aceito: " << word[posi] << "\n";
             if(posi == wordSize){ 
                 currentState = 0 ;
                 if(currentState == 0 && lastFinal != 0){
@@ -75,13 +98,14 @@ void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
                 }
                 
             }else{
-                std::cout << "ERRO\n";
+                std::cout << "ERRO posi\n";
                 newWord = true;
                 output = auxOutput;
                 auxOutput = "";  
             }
             posi++;
         }
-        
+        //std::cout << output << "\n";
     }
 }
+

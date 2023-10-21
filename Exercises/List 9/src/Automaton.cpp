@@ -30,6 +30,7 @@ int getNewCurrentState(int stateLine,int inputColumn,int automaton [][ALPHABET_L
 }
 
 int getInputColumn(char c){
+
     if(c == '+'){
         return 0;
     }else if(c == '-'){
@@ -38,37 +39,37 @@ int getInputColumn(char c){
     else if(isNum(c)){
         return 3;
     }else if(c == '='){
-        return 13;
+        return 12;
     }else if(c == ';'){
-        return 14;
+        return 13;
     }else if(c == 'd'){
-        return 15;
+        return 14;
     }else if( c == 'e'){
-        return 16;
+        return 15;
     }else if( c == 'f'){
-    return 17;
+    return 16;
     }else if( c == 'g'){
-    return 18;
+    return 17;
     }else if( c == 'h'){
-    return 19;
+    return 18;
     }else if( c == 'i'){
-    return 20;
+    return 19;
     }else if( c == 't'){
-    return 21 ;
+    return 20 ;
     }else if( c == 'n'){
-    return 22;
+    return 21;
     }else if( c == 'l'){
-    return 23;
+    return 22;
     }else if( c == 's'){
-    return 24;
+    return 23;
     }else if( c == 'b'){
-    return 25;
+    return 24;
     }else if( c == 'p'){
-    return 26;
+    return 25;
     }else if( c == 'r'){
-    return 27 ;
+    return 26 ;
     } 
-    return 29;
+    return 28;
 }
 
 void lexAnalyser(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine){
