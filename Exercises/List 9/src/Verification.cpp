@@ -41,8 +41,9 @@ void printAll(char word, int inputColumn,int currentState ,int lastFinal ,std::s
     std::cout << "=======Fim======= \n\n";
 }
 
-void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
-    int finalStates[] = {18,19,20,21,22,23,24,25,26,27,28};
+bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
+    bool wordAccepted = false;
+    int finalStates[] = {19,20,21,22,23,24,25,26,27,28};
 
     int wordSize = word.size();
     int posi = 0;
@@ -59,8 +60,6 @@ void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
     //std::cout << "wordSize: " << wordSize << "\n"; 
     while(posi <= wordSize){
         //std::cout << "posi: " << posi << "\n";
-        
-
         if(isCharAccepted(word[posi])){
             inputColumn = getInputColumn(word[posi]);
             currentState = getNewCurrentState(currentState,inputColumn,automaton);
@@ -73,12 +72,12 @@ void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
 
             if(currentState == 0 && lastFinal != 0){
                 //std::cout << "Entrou currentState == 0 && lastFinal != 0\n";
-                printOutput(output,lastFinal);
+                // printOutput(output,lastFinal);
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
-                
+                wordAccepted = true;
             }else if(currentState == 0 && lastFinal == 0){
-                //std::cout << "Entrou currentState == 0 && lastFinal == 0\n";
-                std::cout << "ERRO \n";
+                std::cout << "ERRO currentState == 0 && lastFinal == 0 \n";
+                wordAccepted = false;
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],1);
                 
             }else{
@@ -93,19 +92,23 @@ void checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
             if(posi == wordSize){ 
                 currentState = 0 ;
                 if(currentState == 0 && lastFinal != 0){
-                    printOutput(output,lastFinal);
+                    // printOutput(output,lastFinal);
+                    wordAccepted = true;
                     break;
                 }
                 
             }else{
-                std::cout << "ERRO posi\n";
+                //std::cout << "ERRO posi\n";
                 newWord = true;
                 output = auxOutput;
                 auxOutput = "";  
+                wordAccepted = false;
             }
             posi++;
         }
         //std::cout << output << "\n";
     }
+
+    return wordAccepted;
 }
 

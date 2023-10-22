@@ -2,8 +2,11 @@
 #include <cctype>  // Biblioteca para funções de caracteres
 #include <string>
 #include <algorithm>  // Para a função std::find
+#include <unordered_map>
+
 #include "./h/Verification.h"
 #include "./h/Automaton.h"
+
 std::string getWord(std::string inputStr,int &posiString, int inputSize){
     char c;
     std::string word;
@@ -21,7 +24,7 @@ std::string getWord(std::string inputStr,int &posiString, int inputSize){
 int getNewCurrentState(int stateLine,int inputColumn,int automaton [][ALPHABET_LENGTH]){
     int newState;
     if(inputColumn == -1){
-        std::cout << "ERRO -1\n";
+        std::cout << "ERRO inputColumn\n";
         return 0;
     }else{
         newState = automaton[stateLine][inputColumn];
@@ -31,60 +34,33 @@ int getNewCurrentState(int stateLine,int inputColumn,int automaton [][ALPHABET_L
 
 int getInputColumn(char c){
 
-    if(c == '+'){
-        return 0;
-    }else if(c == '-'){
-        return 1;
-    }
-    else if(isNum(c)){
+    std::unordered_map<char, int> charInputColumn = {
+        {'+', 0},
+        {'-', 1},
+        {'=', 12},
+        {';', 13},
+        {'d', 14},
+        {'e', 15},
+        {'f', 16},
+        {'g', 17},
+        {'h', 18},
+        {'i', 19},
+        {'t', 20},
+        {'n', 21},
+        {'l', 22},
+        {'s', 23},
+        {'b', 24},
+        {'p', 25},
+        {'r', 26}
+    };
+
+    if (charInputColumn.find(c) != charInputColumn.end()) {
+        return charInputColumn[c];
+    }else if(isNum(c)){
         return 3;
-    }else if(c == '='){
-        return 12;
-    }else if(c == ';'){
-        return 13;
-    }else if(c == 'd'){
-        return 14;
-    }else if( c == 'e'){
-        return 15;
-    }else if( c == 'f'){
-    return 16;
-    }else if( c == 'g'){
-    return 17;
-    }else if( c == 'h'){
-    return 18;
-    }else if( c == 'i'){
-    return 19;
-    }else if( c == 't'){
-    return 20 ;
-    }else if( c == 'n'){
-    return 21;
-    }else if( c == 'l'){
-    return 22;
-    }else if( c == 's'){
-    return 23;
-    }else if( c == 'b'){
-    return 24;
-    }else if( c == 'p'){
-    return 25;
-    }else if( c == 'r'){
-    return 26 ;
-    } 
-    return 28;
-}
-
-void lexAnalyser(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine){
-    int posiString = 0;
-    size_t inputStrSize = inputString.size();
-    char ultimoChar;
-    std::string word = "";
-
-    while(posiString <= inputStrSize){
-        ultimoChar = inputString[posiString];
-        word = getWord(inputString,posiString,inputStrSize);
-        checkWordAccepted(word,automaton);
-        posiString++;
     }
     
+    return 28; // Valor padrão se o caractere não for encontrado no mapa.
 }
 
 void resetStates(std::string &auxOut,std::string &output,int &currentState,int &lastFinal,bool &newWord,char c ,int resetType){
@@ -103,31 +79,25 @@ void resetStates(std::string &auxOut,std::string &output,int &currentState,int &
     }
 }
 
-void printToken (int lastFinal){
+std::string getToken (int lastFinal){
 
-    if(lastFinal ==  19){
-    std::cout << "IF ";
-    }else if(lastFinal == 20 ){
-        std::cout << "THEN";
-    }else if(lastFinal == 21 ){
-        std::cout << "ELSE";
-    }else if( lastFinal == 22){
-        std::cout << "END";
-    }else if( lastFinal == 23){
-        std::cout << "BEGIN";
-    }else if( lastFinal == 24){
-        std::cout << "PRINT";
-    }else if( lastFinal == 25){
-        std::cout << "SEMICOL";
-    }else if( lastFinal == 26){
-        std::cout << "EQ";
-    }else if( lastFinal == 27){
-        std::cout << "NUM";
-    }
+    std::unordered_map<int, std::string> lastFinalToken = {
+        {19, "IF"},
+        {20, "THEN"},
+        {21, "ELSE"},
+        {22, "END"},
+        {23,"BEGIN"},
+        {24,"PRINT"},
+        {25,"SEMICOL"},
+        {26,"EQ"},
+        {27,"NUM"}
+    };
+    return lastFinalToken[lastFinal];
 }
 
 void printOutput(std::string output,int lastFinal){
-    printToken(lastFinal);
+    std::string str = getToken(lastFinal);
+    std::cout << str; 
     std::cout << "\n";
 }   
 

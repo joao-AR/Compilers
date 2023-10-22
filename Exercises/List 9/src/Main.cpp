@@ -4,7 +4,8 @@
 #include <algorithm>  // Para a função std::find
 #include "./h/Automaton.h"
 #include "./h/Verification.h"
-
+#include "./h/Lex.h"
+#include "./h/Parsing.h"
 
 int main(){
 
@@ -46,17 +47,23 @@ int main(){
 };
 
     std::string line;
+    bool lexicalError = false;
     bool haveNextLine;
         while (true) {
             // Tenta ler uma linha da entrada padrão
             if (std::getline(std::cin, line)) {
 
                 // verificar se tem mais linhas 
-
                 haveNextLine = std::cin.peek() != EOF ?  haveNextLine = true : haveNextLine = false;
-                //std::cout << "linha:-: " << line << "\n";
                 // chamar a funcão que vai andar pelo automato
-                lexAnalyser(line,automaton,haveNextLine);
+                
+                lexicalError = !lexAnalyser(line,automaton,haveNextLine);
+                
+                if(lexicalError){
+                    std::cout << "Lex error: line: " << line << "\n";
+                }else{
+                    parsing(line,automaton,haveNextLine);
+                }
                 // Verifica se há mais uma linha disponível
                 
             } else {
