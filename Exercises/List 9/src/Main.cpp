@@ -67,7 +67,7 @@ int main(){
                 // Verifica se há mais uma linha disponível
                 
             } else {
-                std::cout << "Erro de leitura ou final do arquivo." << std::endl;
+                //std::cout << "Erro de leitura ou final do arquivo." << std::endl;
                 break;
             }
     }
