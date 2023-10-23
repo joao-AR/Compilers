@@ -2,24 +2,48 @@
 #include <cctype>  // Biblioteca para funções de caracteres
 #include <string>
 #include <algorithm>  // Para a função std::find
-#include <vector>
 #include "../h/Automaton.h"
-#include <unordered_map>
+#include "../h/Parsing.h"
+
 
 int err = 0;
-// IF = 19
-// THEN = 20
-// ELSE = 21
-// END = 22
-// BEGIN = 23
-// PRINT=24
-// SEMI=25
-// EQ=26
-// NUM=27
+const int IF = 19;
+const int THEN = 20;
+const int ELSE = 21;
+const int END = 22;
+const int BEGIN = 23;
+const int PRINT = 24;
+const int SEMI = 25;
+const int EQ = 26;
+const int NUM = 27;
 
-void S(int &token, std::vector<int> lineTokens,int &posi);
-void E(int &inputToken, std::vector<int> lineTokens,int &posi);
-void L(int &token, std::vector<int> lineTokens,int &posi);
+void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine){
+
+    size_t inputStrSize = inputString.size();
+    std::string word = "";
+    bool wordAccepted = false;
+    int posiString = 0;
+    int posiLineTokens;
+    std::vector<int> lineTokens;
+
+    while(posiString <= inputStrSize){
+        word = getWord(inputString,posiString,inputStrSize);
+        getLineTokens(word,automaton,lineTokens);
+        posiString++;
+    }
+
+    S(lineTokens[0],lineTokens,posiLineTokens);
+    if(err == 0 ){
+        std::cout << inputString << "\n";
+        std::cout << "CADEITA ACEITA\n";
+    }
+    // std::cout << "\n";
+    // for (int i = 0; i < lineTokens.size(); i++) {
+    //     std::cout << lineTokens[i] << " ";
+    // }
+    // std::cout << "\n";
+}
+
 std::string getTokenName(int token){
     std::unordered_map<int, std::string> numTokenName = {
         {19, "if"},
@@ -34,6 +58,7 @@ std::string getTokenName(int token){
     };
     return numTokenName[token];
 }
+
 void getLineTokens(std::string word,int automaton [][ALPHABET_LENGTH],std::vector<int> &lineTokens){
     int finalStates[] = {19,20,21,22,23,24,25,26,27,28};
 
@@ -49,10 +74,7 @@ void getLineTokens(std::string word,int automaton [][ALPHABET_LENGTH],std::vecto
     bool isFinalState;
     bool newWord = true;
 
-    //std::cout << "wordSize: " << wordSize << "\n"; 
-    while(posi <= wordSize){
-        //std::cout << "posi: " << posi << "\n";
-        
+    while(posi <= wordSize){        
         inputColumn = getInputColumn(word[posi]);
         currentState = getNewCurrentState(currentState,inputColumn,automaton);
         
@@ -60,14 +82,11 @@ void getLineTokens(std::string word,int automaton [][ALPHABET_LENGTH],std::vecto
         lastFinal = isFinalState ? currentState : lastFinal;
         
         auxOutput = newWord ? auxOutput + word[posi] : auxOutput;
-        //printAll(word[posi], inputColumn,currentState,lastFinal,output,isCharAccepted(word[posi]));
 
         if(currentState == 0 && lastFinal != 0){
-            //std::cout << "Entrou currentState == 0 && lastFinal != 0\n";
             lineTokens.push_back(lastFinal);
             resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
         }else{
-            //std::cout << "Entrou Else \n";
             output = auxOutput;
             newWord = true;
             posi++;
@@ -115,34 +134,6 @@ void eat(int expetedToken , int &inputToken,std::vector<int> lineTokens,int &pos
 }
 
 
-
-void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine){
-
-    size_t inputStrSize = inputString.size();
-    std::string word = "";
-    bool wordAccepted = false;
-    int posiString = 0;
-    int posiLineTokens;
-    std::vector<int> lineTokens;
-
-    while(posiString <= inputStrSize){
-        word = getWord(inputString,posiString,inputStrSize);
-        getLineTokens(word,automaton,lineTokens);
-        posiString++;
-    }
-
-    S(lineTokens[0],lineTokens,posiLineTokens);
-    if(err == 0 ){
-        std::cout << inputString << "\n";
-        std::cout << "CADEITA ACEITA\n";
-    }
-    // std::cout << "\n";
-    // for (int i = 0; i < lineTokens.size(); i++) {
-    //     std::cout << lineTokens[i] << " ";
-    // }
-    // std::cout << "\n";
-}
-
 // S é o inicial
 // S → if E then S else S
 // S → begin S L
@@ -150,35 +141,21 @@ void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool hav
 void S(int &token, std::vector<int> lineTokens,int &posi){
     //std::cout <<  "===============S=============== \n";
     switch(token) {
-        //case IF: eat(IF); E(); eat(THEN); S(); eat(ELSE); S(); break;
-        case 19: 
-            //eat(IF)
-            eat(19,token,lineTokens, posi); 
-            //E()
+        case IF: 
+            eat(IF,token,lineTokens, posi); 
             E(token,lineTokens, posi);
-
-            //eat(THEN)
-            eat(20,token,lineTokens, posi); 
-            //S()
+            eat(THEN,token,lineTokens, posi); 
             S(token,lineTokens, posi); 
-
-            //eat(ELSE)
-            eat(21,token,lineTokens, posi);
-
-            //S()
+            eat(ELSE,token,lineTokens, posi);
             S(token,lineTokens, posi);
         break;
-        //case BEGIN
-        case 23: 
-            //eat(BEGIN)
-            eat(23,token,lineTokens, posi); 
-            //S()
+        case BEGIN: 
+            eat(BEGIN,token,lineTokens, posi); 
             S(token,lineTokens, posi);
             L(token,lineTokens, posi); 
             break;
-        //case PRINT 
-        case 24: 
-        eat(24,token,lineTokens, posi); 
+        case PRINT: 
+        eat(PRINT,token,lineTokens, posi); 
         E(token,lineTokens, posi); 
         break;
         default: 
@@ -194,11 +171,12 @@ void S(int &token, std::vector<int> lineTokens,int &posi){
 void L(int &token, std::vector<int> lineTokens,int &posi){
     //std::cout <<  "===============L=============== \n";
     switch(token) {
-        // END = 22
-        case 22: eat(22,token,lineTokens, posi); break;
-        // SEMI=25
-        case 25: 
-            eat(25,token,lineTokens, posi); 
+        case END: 
+            eat(END,token,lineTokens, posi); 
+            break;
+    
+        case SEMI: 
+            eat(SEMI,token,lineTokens, posi); 
             S(token,lineTokens, posi); 
             L(token,lineTokens, posi); 
             break;
@@ -214,11 +192,8 @@ void L(int &token, std::vector<int> lineTokens,int &posi){
 // E → num = num
 void E(int &inputToken, std::vector<int> lineTokens,int &posi){ 
     //std::cout <<  "===============E=============== \n";
-    // NUM=27
-    eat(27,inputToken,lineTokens,posi);
-    // EQ=26 
-    eat(26,inputToken,lineTokens,posi);
-    // NUM=27 
-    eat(27,inputToken,lineTokens,posi);
+    eat(NUM,inputToken,lineTokens,posi);
+    eat(EQ,inputToken,lineTokens,posi);
+    eat(NUM,inputToken,lineTokens,posi);
     //std::cout <<  "==============FE===============\n";
 }
