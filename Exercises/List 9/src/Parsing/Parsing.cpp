@@ -34,9 +34,10 @@ void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool hav
 
     S(lineTokens[0],lineTokens,posiLineTokens);
     if(err == 0 ){
-        std::cout << inputString << "\n";
+        //std::cout << inputString << "\n";
         std::cout << "CADEITA ACEITA\n";
     }
+    err = 0; // reset no erro para proxima linha
     // std::cout << "\n";
     // for (int i = 0; i < lineTokens.size(); i++) {
     //     std::cout << lineTokens[i] << " ";
@@ -160,7 +161,7 @@ void S(int &token, std::vector<int> lineTokens,int &posi){
         break;
         default: 
             std::string recived = getTokenName(token);
-            std::string errMsg = "ERRO SINTATICO EM: " + recived + " ESPERADO: if,begin, print";
+            std::string errMsg = "ERRO SINTATICO EM: " + recived + " ESPERADO: if, begin, print";
             error(errMsg);         
     }
     //std::cout <<  "==============FS===============\n";
@@ -182,7 +183,7 @@ void L(int &token, std::vector<int> lineTokens,int &posi){
             break;
         default: 
             std::string recived = getTokenName(token);
-            std::string errMsg = "ERRO SINTATICO EM: " + recived + "ESPERADO: end, ;";
+            std::string errMsg = "ERRO SINTATICO EM: " + recived + " ESPERADO: end, ;";
             error(errMsg); 
     }
     //std::cout <<  "===============FL=============== \n";
