@@ -10,7 +10,13 @@
 std::string getWord(std::string inputStr,int &posiString, int inputSize){
     char c;
     std::string word;
-    while (inputStr[posiString  ] != ' '){
+
+     // Lidar com mais de um espaço em branco e o ignorar 
+    while (inputStr[posiString] == ' '){
+        posiString++;
+    }
+
+    while (inputStr[posiString] != ' '){
         c = inputStr[posiString];
         word = word + c;
         posiString++;
