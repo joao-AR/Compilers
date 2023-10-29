@@ -12,7 +12,7 @@ bool isNum(char input){
 }
 
 bool isLetterAccepted(char c){
-    char acceptedLetters[] = {'A','a','B','b','C','c','D','d','E','e','F','f','G','g','H','h','I','i','J','j','K','k','L','l','M','m','O','o','P','p','Q','q','R','r','S','s','T','t','U','u','V','v','W','w','X','x','Y','y','Z','z'}; 
+    char acceptedLetters[] = {'A','a','B','b','C','c','D','d','E','e','F','f','G','g','H','h','I','i','J','j','K','k','L','l','M','m','N','n','O','o','P','p','Q','q','R','r','S','s','T','t','U','u','V','v','W','w','X','x','Y','y','Z','z'}; 
     bool isAceita = std::find(std::begin(acceptedLetters), std::end(acceptedLetters), c) != std::end(acceptedLetters);
     return isAceita;
 }
@@ -43,7 +43,7 @@ void printAll(char word, int inputColumn,int currentState ,int lastFinal ,std::s
 
 bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
     bool wordAccepted = false;
-    int finalStates[] = {6,18,26,28,43,44,46};
+    int finalStates[] = {6,18,26,28,43,44,46,53,56,60,63,66,71,76,81,87,90,95,100,103,105,109,112,123,126,130,131,134,137,146,154,157};
 
     int wordSize = word.size();
     int posi = 0;
