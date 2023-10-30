@@ -5,20 +5,19 @@
 #include "../h/Verification.h"
 #include "../h/Automaton.h"
 
-bool lexAnalyser(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine){
+bool lexAnalyser(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine,bool &commentSearch,bool &lineComment){
     size_t inputStrSize = inputString.size();
     std::string word = "";
     int posiString = 0;
     bool wordAccepted = false;
-    
     while(posiString <= inputStrSize){
         word = getWord(inputString,posiString,inputStrSize);
         if(word != ""){
-            std::cout << "\nWORD ->" << word << "<-\n";
-            wordAccepted = checkWordAccepted(word,automaton);
+            //std::cout << "\n WORD ->" << word << "<-\n";
+            wordAccepted = checkWordAccepted(word,automaton,commentSearch,lineComment);
             if(!wordAccepted){return false;}
         }
-        posiString++;
+        posiString++;// pular o espaço entre as palavras
     }
     return true;
 }

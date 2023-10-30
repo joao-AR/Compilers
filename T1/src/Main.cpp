@@ -117,7 +117,7 @@ int main(){
     
     /*estado 33*/ {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//ASTERISTICO
 
-    /*estado 34*/ {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//BARRA
+    /*estado 34*/ {0,  0,  0,172,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//BARRA
     
     /*estado 35*/ {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//PV (ponto e virgula)
 
@@ -295,12 +295,17 @@ int main(){
     /*estado 171*/{0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},// FCH (FECHA CHAVES)
 
     /*estado 172*/{172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172,172},// COMENTARIO
+    
+    /*estado 173*/{0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},// STRING
 
 };
 
     std::string line;
     bool lexicalError = false;
     bool haveNextLine;
+    bool commentSearch = false;
+    bool lineComment = false;
+    bool stringSearch = false;
         while (true) {
             // Tenta ler uma linha da entrada padrão
             if (std::getline(std::cin, line)) {
@@ -309,7 +314,7 @@ int main(){
                 haveNextLine = std::cin.peek() != EOF ?  haveNextLine = true : haveNextLine = false;
                 // chamar a funcão que vai andar pelo automato
                 
-                lexicalError = !lexAnalyser(line,automaton,haveNextLine);
+                lexicalError = !lexAnalyser(line,automaton,haveNextLine,commentSearch,lineComment);
                 
                 if(lexicalError){
                     std::cout << "Lex error: line: " << line;

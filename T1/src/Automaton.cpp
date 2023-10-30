@@ -205,17 +205,18 @@ std::string getToken (int lastFinal){
         {165,"ATRIBUICAO"},
         {166,"MAIOR"},  
         {167,"MAIORIGUAL"},
-        {168,"ACH"},
+        // {168,"ACH"},
         {170,"COMENTARIO"},
-        {171,"FCH"},
-        {172, "COMENTARIO"}
+        // {171,"FCH"},
+        {172,"COMENTARIO"},
+        {173,"STRING"},
     };
     return lastFinalToken[lastFinal];
 }
 
 void printOutput(std::string output,int lastFinal){
     std::string str = getToken(lastFinal);
-    std::cout << str; 
+    std::cout << str << " "; 
     // std::cout << "\n";
 }   
 
