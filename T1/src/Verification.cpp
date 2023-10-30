@@ -18,9 +18,10 @@ bool isLetterAccepted(char c){
 }
 
 bool isCharAccepted(char c){
-    if(c== '+' || c== '-' || c== '*' || c== '/' || c== ';' || c== ',' || c== ':' || c== '.' || c== '[' || c== ']' || c== '(' || c== ')' || c== '=' || c== '<' || c== '>' ||isNum(c)|| isLetterAccepted(c) ){
+    if(c == '+' || c == '-' || c == '*' || c == '/' || c == ';' || c == ',' || c == ':' || c == '.' || c == '[' || c == ']' || c == '(' || c == ')' || c == '{' || c == '}'|| c == '=' || c == '<' || c == '>' ||isNum(c)|| isLetterAccepted(c) ){
         return true;
     }else{
+        //std::cout << "ERRO CHAR NAO ACEITO";
         return false;
     }
 }
@@ -43,7 +44,7 @@ void printAll(char word, int inputColumn,int currentState ,int lastFinal ,std::s
 
 bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH]){
     bool wordAccepted = false;
-    int finalStates[] = {6,18,26,28,43,44,46,53,56,60,63,66,71,76,81,87,90,95,100,103,105,109,112,123,126,130,131,134,137,146,154,157};
+    int finalStates[] = {3,6,7,11,12,13,18,26,28,31,32,33,34,35,43,44,46,53,56,60,63,64,66,71,76,81,87,90,95,100,103,105,109,112,123,126,130,131,134,137,146,154,157,158,159,160,161,162,163,164,165,166,167,168,170,171,172};
 
     int wordSize = word.size();
     int posi = 0;

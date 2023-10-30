@@ -5,7 +5,7 @@
 #define Auto
 
     #define INITIAL_STATE = 1
-    #define ALPHABET_LENGTH 51
+    #define ALPHABET_LENGTH 53
 
     std::string getWord(std::string inputStr,int &posiString, int inputSize);
     int getInputColumn(char c);

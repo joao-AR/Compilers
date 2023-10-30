@@ -121,14 +121,16 @@ int getInputColumn(char c){
         {')',47},
         {'=',48},
         {'<',49},
-        {'>',50}
+        {'>',50},
+        {'{',51},
+        {'}',52}
     };
 
     if (charInputColumn.find(c) != charInputColumn.end()) {
         return charInputColumn[c];
     }
     
-    return 51; // Valor padrão se o caractere não for encontrado no mapa.
+    return 53; // Valor padrão se o caractere não for encontrado no mapa.
 }
 
 void resetStates(std::string &auxOut,std::string &output,int &currentState,int &lastFinal,bool &newWord,char c ,int resetType){
@@ -150,30 +152,41 @@ void resetStates(std::string &auxOut,std::string &output,int &currentState,int &
 std::string getToken (int lastFinal){
 
     std::unordered_map<int, std::string> lastFinalToken = {
+        {3,"NINTEIRO"},
         {6,"E"},
-        {18,"IDENTIFICADOR"},
+        {7,"MAIS"},
+        {11,"DP"},
+        {12,"PONTO"},
+        {13,"IGUAL"},
+        {18,"IDENTIFICADOR"} , 
         {26,"ALGORITIMO"},
-        {28,"ATE"},
-        {43,"CARACTERE"},
+        {28,"ATE"}, 
+        {31,"NREAL"},
+        {32,"MENOS"},
+        {33,"ASTERISCO"},
+        {34,"BARRA"},
+        {35,"PV"},
+        {43,"CARACTERE"}, 
         {44,"DE"},
-        {46,"DIV"},
-        {53,"ENQUANTO"},
-        {56,"ENTAO"},
-        {60,"FACA"},
+        {46,"DIV"}, 
+        {53,"ENQUANTO"}, 
+        {56,"ENTAO"}, 
+        {60,"FACA"}, 
         {63,"FALSO"},
+        {64,"VIRGULA"},
         {66,"FIM"},
-        {71,"FUNCAO"},
+        {71,"FUNCAO"} ,
         {76,"INICIO"},
         {81,"INTEIRO"},
         {87,"IMPRIMA"},
         {90,"LEIA"},
-        {95,"LOGICO"},
-        {100,"MATRIZ"},
+        {95,"LOGICO"}, 
+        {100,"MATRIZ"} ,
         {103,"NAO"},
         {105,"OU"},
         {109,"PARA"},
         {112,"PASSO"},
-        {123,"PROCEDIMENTO"},
+        {123,"procedimento"},
         {126,"REAL"},
         {130,"REPITA"},   
         {131,"SE"},
@@ -182,6 +195,20 @@ std::string getToken (int lastFinal){
         {146,"VERDADEIRO"},
         {154,"VARIAVEIS"}, 
         {157,"VETOR"}, 
+        {158,"AC"},
+        {159,"FC"}, 
+        {160,"AP"},
+        {161,"FP"},
+        {162,"MENOR"},
+        {163,"DIFERENTE"},  
+        {164,"MENORIGUAL"},
+        {165,"ATRIBUICAO"},
+        {166,"MAIOR"},  
+        {167,"MAIORIGUAL"},
+        {168,"ACH"},
+        {170,"COMENTARIO"},
+        {171,"FCH"},
+        {172, "COMENTARIO"}
     };
     return lastFinalToken[lastFinal];
 }
