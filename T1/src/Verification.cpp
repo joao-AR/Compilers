@@ -42,9 +42,19 @@ void printAll(char word, int inputColumn,int currentState ,int lastFinal ,std::s
     std::cout << "=======Fim======= \n\n";
 }
 
+void checkSingleLineComment(std::string word,int &posi,bool &lineComment,std::string output){
+    if(word[posi] == '/' && word[posi+1] == '/' ){// Verrifica se vai ser um comentario de linha
+        lineComment = true;
+        int currentState = 0;
+        int lastFinal = 172;
+        printOutput(output,lastFinal);
+        
+    }
+}
+
 bool stringSearch = false;
 bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment){
-    
+    //std::cout<< "Aword > " << word << "\n";
     bool wordAccepted = false;
 
     int finalStates[] = {3,6,7,11,12,13,18,26,28,31,32,33,34,35,43,44,46,53,56,60,63,64,66,71,76,81,87,90,95,100,103,105,109,112,123,126,130,131,134,137,146,154,157,158,159,160,161,162,163,164,165,166,167,168,170,171,172,173};
@@ -62,13 +72,8 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
     bool isFinalState;
     bool newWord = true;
     
-    if(word[posi] == '/' && word[posi+1] == '/' ){// Verrifica se vai ser um comentario de linha
-        lineComment = true;
-        currentState = 0;
-        lastFinal = 172;
-        printOutput(output,lastFinal);
-        resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
-    }
+    checkSingleLineComment(word,posi,lineComment,output);
+    if(lineComment){return true;}
     
     if(commentSearch){ // Se estivermos procurando um comentario de bloco
         while(posi <= wordSize){
@@ -77,33 +82,30 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             }else if(word[posi] == '}'){
                 commentSearch = false;
                 currentState = 0;
-                lastFinal = 172;
+                lastFinal = 170;
                 printOutput(output,lastFinal);
+                //posi++;
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
                 break;
             }
         }   
-    }
-
-    if(stringSearch){
+    }else if(stringSearch){
         while(posi <= wordSize){
-            if(word[posi] != '"'){// Procurando final da string
-                    posi++;
-                }else if(word[posi] == '"'){
-                    stringSearch = false;
-                    currentState = 0;
-                    lastFinal = 173;
-                    printOutput(output,lastFinal);
-                    resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
-                    break;
-                }
+            if(word[posi] == '"'){
+                stringSearch = false;
+                currentState = 0;
+                lastFinal = 173;
+                printOutput(output,lastFinal);
+                return true;
+            }else{
+                posi++;
+            }
         }
     }
 
-    if(commentSearch || lineComment|| stringSearch){// Se estiver procurando comentario ainda aceita qualquer palavra OU comentario de linha
+    if(commentSearch || lineComment ||stringSearch){// Se estiver procurando comentario ainda aceita qualquer palavra OU comentario de linha
         return true;
     }
-
     while(posi <= wordSize){
         if(isCharAccepted(word[posi])){
             inputColumn = getInputColumn(word[posi]);
@@ -111,10 +113,21 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
 
             isFinalState = std::find(std::begin(finalStates), std::end(finalStates), currentState) != std::end(finalStates);
             lastFinal = isFinalState ? currentState : lastFinal;
-
-            if(word[posi] == '"'){// string
-                stringSearch = true;
-                return true;
+            
+            if(word[posi] == '"' && !stringSearch){
+                //std::cout << "tringSearch = true;\n";
+                // std::cout <<  "word[posi+1] " << word[posi+1] << "\n";
+                // std::cout <<  "word[wordSize] " << word[wordSize-1] << "\n";
+                if(word[posi] == '"' && word[wordSize-1] == '"' ){
+                    stringSearch = false;
+                    currentState = 0;
+                    lastFinal = 173;
+                    printOutput(output,lastFinal);
+                    return true;
+                }else{
+                    stringSearch = true;
+                    return true;
+                }
             }
             if(word[posi] == '{'){
                 commentSearch = true;
@@ -163,7 +176,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
         }
         //std::cout << output << "\n";
     }
-
+    //std::cout <<"\n";
     return wordAccepted;
 }
 

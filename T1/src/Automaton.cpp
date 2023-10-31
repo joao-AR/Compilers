@@ -123,14 +123,15 @@ int getInputColumn(char c){
         {'<',49},
         {'>',50},
         {'{',51},
-        {'}',52}
+        {'}',52},
+        {'"',53},
     };
 
     if (charInputColumn.find(c) != charInputColumn.end()) {
         return charInputColumn[c];
     }
     
-    return 53; // Valor padrão se o caractere não for encontrado no mapa.
+    return 54; // Valor padrão se o caractere não for encontrado no mapa.
 }
 
 void resetStates(std::string &auxOut,std::string &output,int &currentState,int &lastFinal,bool &newWord,char c ,int resetType){
@@ -205,10 +206,8 @@ std::string getToken (int lastFinal){
         {165,"ATRIBUICAO"},
         {166,"MAIOR"},  
         {167,"MAIORIGUAL"},
-        // {168,"ACH"},
-        {170,"COMENTARIO"},
-        // {171,"FCH"},
-        {172,"COMENTARIO"},
+        {170,"COMENTARIOBLOCO"},
+        {172,"COMENTARIOLINHA"},
         {173,"STRING"},
     };
     return lastFinalToken[lastFinal];
