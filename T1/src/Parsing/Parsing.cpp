@@ -5,7 +5,7 @@
 #include "../h/Automaton.h"
 #include "../h/Parsing.h"
 
-const bool printDebug = true;
+const bool printDebug = false;
 int err = 0;
 const int INTEIRO = 81;
 const int REAL = 126;
@@ -28,7 +28,7 @@ void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool hav
     std::string word = "";
     bool wordAccepted = false;
     int posiString = 0;
-    int posiLineTokens;
+    int posiLineTokens = 0;
     std::vector<int> lineTokens;
 
     while(posiString <= inputStrSize){
@@ -38,15 +38,16 @@ void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool hav
     }
 
     Programa(lineTokens[0],lineTokens,posiLineTokens);
-    // if(err == 0 ){
-    //     std::cout << "CADEITA ACEITA";
-    // }
-    // err = 0; // reset no erro para proxima linha
-    std::cout << "\n";
-    for (int i = 0; i < lineTokens.size(); i++) {
-        std::cout << lineTokens[i] << " ";
+    if(err == 0 ){
+        std::cout << "CADEITA ACEITA";
     }
-    std::cout << "\n";
+    err = 0; // reset no erro para proxima linha
+    // std::cout << "\n";
+    // std::cout << "\n";
+    // for (int i = 0; i < lineTokens.size(); i++) {
+    //     std::cout << lineTokens[i] << " ";
+    // }
+    // std::cout << "\n";
 }
 
 std::string getTokenName(int token){
@@ -168,18 +169,17 @@ void error(std::string errMsg){
 
 // Pega o proximo token no vetor
 int getToken(std::vector<int> lineTokens,int &posi){
-    if(printDebug){ std::cout <<  "===============GETTOKEN=============== \n";}
+    //if(printDebug){ std::cout <<  "===============GETTOKEN=============== \n";}
     posi++; // vai para a proxima posi do vetor
-    std::cout << "lineTokens[posi] ->" << posi <<"\n";
-    if(printDebug){ std::cout <<  "===============FIM-GETTOKEN=============== \n";}
+    //if(printDebug){ std::cout <<  "===============FIM-GETTOKEN=============== \n";}
     return lineTokens[posi];
 }
 
 // Vai retornar o Proximo Token do vetor de tokens 
 int advance(std::vector<int>  lineTokens,int &posiLineTokens) {
-    if(printDebug){ std::cout <<  "===============ADVANCE=============== \n";}
+    //if(printDebug){ std::cout <<  "===============ADVANCE=============== \n";}
     int token = getToken(lineTokens,posiLineTokens);
-    if(printDebug){ std::cout <<  "===============FIM_ADVANCE=============== \n";}
+    //if(printDebug){ std::cout <<  "===============FIM_ADVANCE=============== \n";}
     return token;
 }
 
@@ -221,12 +221,12 @@ void Programa(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "\n===============PROGRAMA=============== \n";}
     
     eat(ALGORITIMO,token,lineTokens, posi);
-    // eat(IDENTIFICADOR,token,lineTokens, posi); 
-    // eat(PV,token,lineTokens, posi); // ;
-    // // BlocoVariaveis();
-    // ProcedimentoFuncao(token,lineTokens, posi);
-    // // BlocoComandos();
-    // eat(PONTO,token,lineTokens, posi); 
+    eat(IDENTIFICADOR,token,lineTokens, posi); 
+    eat(PV,token,lineTokens, posi); // ;
+    // BlocoVariaveis();
+    ProcedimentoFuncao(token,lineTokens, posi);
+    // BlocoComandos();
+    eat(PONTO,token,lineTokens, posi); 
 
     if(printDebug){ std::cout <<  "==============FIM-PROGRAMA===============\n";}
 }
@@ -238,7 +238,8 @@ void ProcedimentoFuncao(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "===============ProcedimentoFuncao=============== \n";}
     
     switch(token) {
-        case PROCEDIMENTO: 
+        case PROCEDIMENTO:
+            eat(PROCEDIMENTO,token,lineTokens, posi); 
             // DeclaraProcedimento(token,lineTokens, posi);
             // ProcedimentoFuncao(token,lineTokens, posi);
         break;
