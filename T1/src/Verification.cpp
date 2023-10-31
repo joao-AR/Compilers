@@ -65,7 +65,28 @@ void blockCommentHandler(std::string word,int &posi,std::string output,bool &com
     } 
 }
 
-
+bool blockStringHandler(std::string word,int &posi,std::string output,bool &stringSearch, int type){
+    int wordSize = word.size();
+    if(type == 1){
+        while(posi <= wordSize){
+            if(word[posi] == '"'){
+                stringSearch = false;
+                printOutput(output,173);
+                return true;
+            }
+            posi++;
+        }
+    }else if(type == 2 ){
+        if(word[posi] == '"' && word[wordSize-1] == '"' && wordSize > 1 ){
+            stringSearch = false;
+            printOutput(output,173);
+        }else{
+            stringSearch = true;
+        }
+        return true;
+    }
+    return false;
+}
 bool stringSearch = false;
 bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment){
     //std::cout<< "Aword > " << word << "\n";
@@ -92,17 +113,8 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
     if(commentSearch){ // Se estivermos procurando um comentario de bloco
         blockCommentHandler(word,posi,output,commentSearch);
     }else if(stringSearch){
-        while(posi <= wordSize){
-            if(word[posi] == '"'){
-                stringSearch = false;
-                currentState = 0;
-                lastFinal = 173;
-                printOutput(output,lastFinal);
-                return true;
-            }else{
-                posi++;
-            }
-        }
+        bool resp = blockStringHandler(word,posi,output,stringSearch,1);
+        if(resp){return true;}
     }
 
     if(commentSearch || lineComment ||stringSearch){// Se estiver procurando comentario ainda aceita qualquer palavra OU comentario de linha
@@ -117,15 +129,10 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             lastFinal = isFinalState ? currentState : lastFinal;
             
             if(word[posi] == '"' && !stringSearch){
-                if(word[posi] == '"' && word[wordSize-1] == '"' && wordSize > 1 ){
-                    stringSearch = false;
-                    lastFinal = 173;
-                    printOutput(output,lastFinal);
-                }else{
-                    stringSearch = true;
-                }
+                blockStringHandler(word,posi,output,stringSearch,2);
                 return true;
             }
+
             if(word[posi] == '{'){
                 commentSearch = true;
                 return true;
