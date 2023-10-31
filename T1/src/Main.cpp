@@ -6,7 +6,7 @@
 #include "./h/Verification.h"
 #include "./h/Lex.h"
 #include "./h/Parsing.h"
-
+    //8,15,16
 int main(){
     /*Estado finais 
         {3,"NINTEIRO"},

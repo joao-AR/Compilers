@@ -91,8 +91,7 @@ bool stringSearch = false;
 bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment,int &linePosi,int &columnPosi){
     //std::cout<< "Aword > " << word << "\n";
     bool wordAccepted = false;
-
-    int finalStates[] = {3,6,7,11,12,13,18,26,28,31,32,33,34,35,43,44,46,53,56,60,63,64,66,71,76,81,87,90,95,100,103,105,109,112,123,126,130,131,134,137,146,154,157,158,159,160,161,162,163,164,165,166,167,168,170,171,172,173};
+    int finalStates[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,26,28,31,32,33,34,35,43,44,46,53,56,57,60,63,64,66,71,76,81,87,90,95,100,101,103,104,105,106,109,112,123,126,130,131,134,137,146,154,157,158,159,160,161,162,163,164,165,166,167,168,170,171,172,173};
 
     int wordSize = word.size();
     int posi = 0;
@@ -149,11 +148,8 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
                 wordAccepted = true;
             }else if(currentState == 0 && lastFinal == 0){
-                std::cout << "ERRO currentState == 0 && lastFinal == 0 \n";
-                wordAccepted = false;
-                exit(1);
-                resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],1);
-                
+                std::cout << "ERRO LEXICO. Linha: " << linePosi << " Coluna: " << columnPosi-1 << " -> " << "'" << word[posi]<<"'"; // ERRO não chegou a nenhum estado 
+                return false;
             }else{
                 output = auxOutput;
                 newWord = true;
@@ -170,7 +166,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
                 }
                 
             }else{
-                std::cout << "ERRO LEXICO. Linha: " << linePosi << " Coluna: " << columnPosi-1 << "-> " << "'" << word[posi]<<"'"; // ERRO char não aceito 
+                std::cout << "ERRO LEXICO. Linha: " << linePosi << " Coluna: " << columnPosi-1 << " -> " << "'" << word[posi]<<"'"; // ERRO char não aceito 
                 return false;
             }
             posi++;
