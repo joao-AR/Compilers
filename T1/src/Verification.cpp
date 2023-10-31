@@ -51,7 +51,7 @@ void checkSingleLineComment(std::string word,int &posi,bool &lineComment,std::st
         
     }
 }
-void blockComment(std::string word,int &posi,std::string output,bool &commentSearch){
+void blockCommentHandler(std::string word,int &posi,std::string output,bool &commentSearch){
     int wordSize = word.size();
     while(posi <= wordSize){
         if(word[posi] != '}'){// Procurando final do commentario
@@ -64,6 +64,7 @@ void blockComment(std::string word,int &posi,std::string output,bool &commentSea
         }
     } 
 }
+
 
 bool stringSearch = false;
 bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment){
@@ -89,7 +90,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
     if(lineComment){return true;}
     
     if(commentSearch){ // Se estivermos procurando um comentario de bloco
-        blockComment(word,posi,output,commentSearch);
+        blockCommentHandler(word,posi,output,commentSearch);
     }else if(stringSearch){
         while(posi <= wordSize){
             if(word[posi] == '"'){
@@ -116,19 +117,14 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             lastFinal = isFinalState ? currentState : lastFinal;
             
             if(word[posi] == '"' && !stringSearch){
-                //std::cout << "tringSearch = true;\n";
-                // std::cout <<  "word[posi+1] " << word[posi+1] << "\n";
-                // std::cout <<  "word[wordSize] " << word[wordSize-1] << "\n";
-                if(word[posi] == '"' && word[wordSize-1] == '"' ){
+                if(word[posi] == '"' && word[wordSize-1] == '"' && wordSize > 1 ){
                     stringSearch = false;
-                    currentState = 0;
                     lastFinal = 173;
                     printOutput(output,lastFinal);
-                    return true;
                 }else{
                     stringSearch = true;
-                    return true;
                 }
+                return true;
             }
             if(word[posi] == '{'){
                 commentSearch = true;
