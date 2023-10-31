@@ -51,6 +51,19 @@ void checkSingleLineComment(std::string word,int &posi,bool &lineComment,std::st
         
     }
 }
+void blockComment(std::string word,int &posi,std::string output,bool &commentSearch){
+    int wordSize = word.size();
+    while(posi <= wordSize){
+        if(word[posi] != '}'){// Procurando final do commentario
+            posi++;
+        }else if(word[posi] == '}'){
+            commentSearch = false;
+            int lastFinal = 170;
+            printOutput(output,lastFinal);
+            break;
+        }
+    } 
+}
 
 bool stringSearch = false;
 bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment){
@@ -76,19 +89,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
     if(lineComment){return true;}
     
     if(commentSearch){ // Se estivermos procurando um comentario de bloco
-        while(posi <= wordSize){
-            if(word[posi] != '}'){// Procurando final do commentario
-                posi++;
-            }else if(word[posi] == '}'){
-                commentSearch = false;
-                currentState = 0;
-                lastFinal = 170;
-                printOutput(output,lastFinal);
-                //posi++;
-                resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
-                break;
-            }
-        }   
+        blockComment(word,posi,output,commentSearch);
     }else if(stringSearch){
         while(posi <= wordSize){
             if(word[posi] == '"'){
