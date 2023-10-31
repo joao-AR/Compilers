@@ -307,29 +307,35 @@ int main(){
     bool commentSearch = false;
     bool lineComment = false;
     bool stringSearch = false;
-        while (true) {
-            // Tenta ler uma linha da entrada padrão
-            if (std::getline(std::cin, line)) {
 
-                // verificar se tem mais linhas 
-                haveNextLine = std::cin.peek() != EOF ?  haveNextLine = true : haveNextLine = false;
-                // chamar a funcão que vai andar pelo automato
-                
-                lexicalError = !lexAnalyser(line,automaton,haveNextLine,commentSearch,lineComment);
-                if(lineComment){lineComment = false;}
-                if(lexicalError){
-                    std::cout << "Lex error: line: " << line << "\n";
-                }else{
-                   // parsing(line,automaton,haveNextLine);
-                    if(haveNextLine == true){
-                        std::cout << "\n";
-                    }
+    int linePosi = 1;
+    int columnPosi = 1;
+    
+    while (true) {
+        // Tenta ler uma linha da entrada padrão
+        if (std::getline(std::cin, line)) {
+
+            // verificar se tem mais linhas 
+            haveNextLine = std::cin.peek() != EOF ?  haveNextLine = true : haveNextLine = false;
+            // chamar a funcão que vai andar pelo automato
+            
+            lexicalError = !lexAnalyser(line,automaton,haveNextLine,commentSearch,lineComment,linePosi,columnPosi);
+            if(lineComment){lineComment = false;}
+            if(lexicalError){
+                std::cout << "Lex error: line: " << line << "\n";
+            }else{
+                // parsing(line,automaton,haveNextLine);
+                if(haveNextLine == true){
+                    std::cout << "\n";
                 }
-                // Verifica se há mais uma linha disponível 
-            } else {
-                //std::cout << "Erro de leitura ou final do arquivo." << std::endl;
-                break;
             }
+            columnPosi = 1;
+            linePosi++;
+            // Verifica se há mais uma linha disponível 
+        } else {
+            //std::cout << "Erro de leitura ou final do arquivo." << std::endl;
+            break;
+        }
     }
 
 }

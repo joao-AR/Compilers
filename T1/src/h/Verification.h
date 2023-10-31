@@ -6,6 +6,6 @@
     bool isNum(char input);
     bool isWordAccepted(char c);
     bool isCharAccepted(char c);
-    bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment);
+    bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment,int &linePosi,int &columnPosi);
 
 #endif

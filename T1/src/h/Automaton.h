@@ -7,7 +7,7 @@
     #define INITIAL_STATE = 1
     #define ALPHABET_LENGTH 54
 
-    std::string getWord(std::string inputStr,int &posiString, int inputSize);
+    std::string getWord(std::string inputStr,int &posiString, int inputSize,int &columnPosi);
     int getInputColumn(char c);
     int getNewCurrentState(int stateLine,int inputColumn,int automaton [][ALPHABET_LENGTH]);
     void resetStates(std::string &auxOut,std::string &output,int &currentState,int &lastFinal,bool &newWord,char c ,int resetType);

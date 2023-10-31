@@ -88,7 +88,7 @@ bool blockStringHandler(std::string word,int &posi,std::string output,bool &stri
     return false;
 }
 bool stringSearch = false;
-bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment){
+bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment,int &linePosi,int &columnPosi){
     //std::cout<< "Aword > " << word << "\n";
     bool wordAccepted = false;
 
@@ -117,10 +117,12 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
         if(resp){return true;}
     }
 
-    if(commentSearch || lineComment ||stringSearch){// Se estiver procurando comentario ainda aceita qualquer palavra OU comentario de linha
+    if(commentSearch || lineComment || stringSearch){// Se estiver procurando comentario ainda aceita qualquer palavra OU comentario de linha
         return true;
     }
+
     while(posi <= wordSize){
+        columnPosi++;
         if(isCharAccepted(word[posi])){
             inputColumn = getInputColumn(word[posi]);
             currentState = getNewCurrentState(currentState,inputColumn,automaton);
@@ -153,14 +155,12 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],1);
                 
             }else{
-                //std::cout << "Entrou Else \n";
                 output = auxOutput;
                 newWord = true;
                 posi++;
             }
             
         }else{
-            //std::cout << "char não aceito: " << word[posi] << "\n";
             if(posi == wordSize){ 
                 currentState = 0 ;
                 if(currentState == 0 && lastFinal != 0){
@@ -170,11 +170,8 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
                 }
                 
             }else{
-                //std::cout << "ERRO posi\n";
-                newWord = true;
-                output = auxOutput;
-                auxOutput = "";  
-                wordAccepted = false;
+                std::cout << "ERRO LEXICO. Linha: " << linePosi << " Coluna: " << columnPosi-1 << "-> " << "'" << word[posi]<<"'"; // ERRO char não aceito 
+                return false;
             }
             posi++;
         }

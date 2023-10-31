@@ -7,18 +7,18 @@
 #include "./h/Verification.h"
 #include "./h/Automaton.h"
 
-void ignoreSpaces(std::string inputStr,int &posiString, int inputSize){
+void ignoreSpaces(std::string inputStr,int &posiString, int inputSize,int &columnPosi){
     if(inputStr[posiString] == ' '){
         while (inputStr[posiString] == ' '){
-            //std::cout << "CHAR -> " << inputStr[posiString] << "<- \n";
             posiString++;
+            columnPosi++;// ignora espaços em braco mas ainda adiciona atualiza a coluna
         }
     }
 }
-std::string getWord(std::string inputStr,int &posiString, int inputSize){
+std::string getWord(std::string inputStr,int &posiString, int inputSize,int &columnPosi){
     char c;
     std::string word;
-    ignoreSpaces(inputStr,posiString,inputSize); 
+    ignoreSpaces(inputStr,posiString,inputSize,columnPosi); 
     
     while (inputStr[posiString] != ' ' && posiString < inputSize){
         c = inputStr[posiString];
