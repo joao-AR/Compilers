@@ -324,7 +324,7 @@ int main(){
             if(lexicalError){
                 std::cout << "Lex error: line: " << line << "\n";
             }else{
-                // parsing(line,automaton,haveNextLine);
+                parsing(line,automaton,haveNextLine,linePosi,columnPosi);
                 if(haveNextLine == true){
                     std::cout << "\n";
                 }

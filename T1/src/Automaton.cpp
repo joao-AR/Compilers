@@ -201,7 +201,7 @@ std::string getToken (int lastFinal){
         {106,"IDENTIFICADOR"},
         {109,"PARA"},
         {112,"PASSO"},
-        {123,"procedimento"},
+        {123,"PROCEDIMENTO"},
         {126,"REAL"},
         {130,"REPITA"},   
         {131,"SE"},
