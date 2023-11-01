@@ -7,20 +7,6 @@
 
 const bool printDebug = false;
 int err = 0;
-const int INTEIRO = 81;
-const int REAL = 126;
-const int CARACTERE = 43;
-const int LOGICO = 95;
-const int PV =  35; // ;
-const int PROCEDIMENTO = 123;
-const int FUNCAO = 71;
-const int ALGORITIMO = 26;
-const int IDENTIFICADOR = 18;
-const int DP = 11;
-const int PONTO = 12;
-const int AP = 160;
-const int FP = 161 ;
-void Programa(int &token, std::vector<int> lineTokens,int &posi);
 
 void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine,int &linePosi,int &columnPosi){
 
@@ -205,32 +191,142 @@ void eat(int expetedToken , int &inputToken,std::vector<int> lineTokens,int &pos
 
 
 //Programa → algoritmo identificador ; BlocoVariaveis ProcedimentoFuncao BlocoComandos .
-void BlocoVariaveis(int &token, std::vector<int> lineTokens,int &posi){}
-void BlocoComandos(int &token, std::vector<int> lineTokens,int &posi){}
-
-void ProcedimentoFuncao(int &token, std::vector<int> lineTokens,int &posi);
-
-void DeclaraProcedimento(int &token, std::vector<int> lineTokens,int &posi);
-void DeclaraFuncao(int &token, std::vector<int> lineTokens,int &posi);
-void TipoBasico(int &token, std::vector<int> lineTokens,int &posi);
-void DeclaraVariaveis(int &token, std::vector<int> lineTokens,int &posi);
-void DeclaraParametrosDeclaracoes(int &token, std::vector<int> lineTokens,int &posi);
-void Parametros (int &token, std::vector<int> lineTokens,int &posi);
-
 void Programa(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "\n===============PROGRAMA=============== \n";}
     
     eat(ALGORITIMO,token,lineTokens, posi);
     eat(IDENTIFICADOR,token,lineTokens, posi); 
     eat(PV,token,lineTokens, posi); // ;
-    // BlocoVariaveis();
-    ProcedimentoFuncao(token,lineTokens, posi);
+    BlocoVariaveis(token,lineTokens, posi);
+    //ProcedimentoFuncao(token,lineTokens, posi);
     // BlocoComandos();
     eat(PONTO,token,lineTokens, posi); 
 
     if(printDebug){ std::cout <<  "==============FIM-PROGRAMA===============\n";}
 }
 
+//BlocoVariaveis → variaveis Declaracoes
+//BlocoVariaveis →
+const int VARIAVEIS = 154;
+void Declaracoes(int &token, std::vector<int> lineTokens,int &posi);
+
+void BlocoVariaveis(int &token, std::vector<int> lineTokens,int &posi){
+    if(printDebug){ std::cout <<  "===============BlocoVariaveis=============== \n";}
+    switch (token){
+    case VARIAVEIS:
+            eat(VARIAVEIS,token,lineTokens, posi);
+            Declaracoes(token,lineTokens, posi);
+    break;
+    default:
+        //BlocoVariaveis →
+        break;
+    }
+    
+    if(printDebug){ std::cout <<  "==============FIM-BlocoVariaveis===============\n";}
+
+}
+
+bool checkTipoBasico(int token){
+    if(token == INTEIRO || token == REAL ||  token == CARACTERE ||token ==  LOGICO || token == IDENTIFICADOR){
+        return true;
+    }
+    return false;
+}
+
+// Declaracoes → DeclaraVariaveis
+// Declaracoes → DeclaraTipo
+// Declaracoes → DeclaraVariaveis Declaracoes
+// Declaracoes → DeclaraTipo Declaracoes
+void Declaracoes(int &token, std::vector<int> lineTokens,int &posi){
+    if(checkTipoBasico(token)){
+        DeclaraVariaveis(token,lineTokens, posi);// Declaracoes → DeclaraVariaveis
+        if(checkTipoBasico(token) || token == TIPO){
+            Declaracoes(token,lineTokens, posi); // Declaracoes → DeclaraVariaveis Declaracoes
+        }    
+    }else if(token == TIPO){ // Declaracoes → DeclaraTipo
+        DeclaraTipo(token,lineTokens, posi);
+        if(checkTipoBasico(token) || token == TIPO){
+            Declaracoes(token,lineTokens, posi); // Declaracoes → DeclaraVariaveis Declaracoes
+        } 
+    }else{
+        //Todo Imprime ERRO
+    }
+}
+
+// DeclaraTipo → tipo identificador = VetorMatriz [ Dimensao ] TipoBasico ;
+void DeclaraTipo(int &token, std::vector<int> lineTokens,int &posi){
+    eat(TIPO,token,lineTokens, posi);
+    eat(IDENTIFICADOR,token,lineTokens, posi);
+    eat(IGUAL,token,lineTokens, posi);
+    VetorMatriz(token,lineTokens, posi);
+    eat(AC,token,lineTokens, posi);// [
+    Dimensao(token,lineTokens, posi);
+    eat(FC,token,lineTokens, posi);// ]
+    TipoBasico(token,lineTokens, posi);
+    eat(PV,token,lineTokens, posi);// ;
+}
+
+//VetorMatriz → vetor
+//VetorMatriz → matriz
+void VetorMatriz(int &token, std::vector<int> lineTokens,int &posi){
+    if(token == VETOR){
+        eat(VETOR,token,lineTokens, posi);
+    }else if(token == MATRIZ){
+        eat(MATRIZ,token,lineTokens, posi);
+    }else{
+        //Todo ERRO
+    }
+}
+
+//Dimensao → numero inteiro : numero inteiro
+//Dimensao → numero inteiro : numero inteiro , Dimensao
+void Dimensao(int &token, std::vector<int> lineTokens,int &posi){
+    //Dimensao → numero inteiro : numero inteiro
+    eat(NINTEIRO,token,lineTokens, posi);//numero_inteiro 
+    eat(DP,token,lineTokens, posi);//:
+    eat(NINTEIRO,token,lineTokens, posi);//numero_inteiro
+    if(token == VIRGULA){ //Dimensao → numero inteiro : numero inteiro , Dimensao
+        eat(VIRGULA,token,lineTokens, posi);
+        Dimensao(token,lineTokens, posi);
+    }
+}
+
+//DeclaraVariaveis → TipoBasico : DeclaraIdentificador ;
+void DeclaraVariaveis(int &token, std::vector<int> lineTokens,int &posi){
+    if(printDebug){ std::cout <<  "===============DeclaraVariaveis=============== \n";}
+
+    if(token == INTEIRO || token == REAL ||  token == CARACTERE ||token ==  LOGICO || token == IDENTIFICADOR){
+        TipoBasico(token,lineTokens, posi);
+        eat(DP,token,lineTokens, posi);//:
+        DeclaraIdentificador(token,lineTokens, posi);
+        eat(PV,token,lineTokens, posi);//;
+    }else{
+        // std::string recived = getTokenName(token);
+        // std::string errMsg = "ERRO SINTATICO EM: " + recived + "ERRO PADRAO";
+        // error(errMsg);
+        // exit(1); 
+    }
+    if(printDebug){ std::cout <<  "===============FIM-DeclaraVariaveis=============== \n";}
+}
+
+// DeclaraIdentificador → identificador
+// DeclaraIdentificador → identificador , DeclaraIdentificador
+void DeclaraIdentificador(int &token, std::vector<int> lineTokens,int &posi){
+    switch (token){
+    case IDENTIFICADOR:
+        eat(IDENTIFICADOR,token,lineTokens, posi);// DeclaraIdentificador → identificador
+        
+        if(token == VIRGULA){
+            eat(VIRGULA,token,lineTokens, posi);
+            DeclaraIdentificador(token,lineTokens, posi);// DeclaraIdentificador → identificador , DeclaraIdentificador
+        }
+        break;
+    
+    default:
+        //Todo ERRO
+        break;
+    }
+}
 // ProcedimentoFuncao → DeclaraProcedimento ProcedimentoFuncao
 // ProcedimentoFuncao → DeclaraFuncao ProcedimentoFuncao
 // ProcedimentoFuncao →
@@ -258,75 +354,12 @@ void ProcedimentoFuncao(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "==============FIM-ProcedimentoFuncao===============\n";}
 
 }
-// DeclaraProcedimento → procedimento identificador Parametros ; DeclaraParametros BlocoVariaveis BlocoComandos ;
-void DeclaraProcedimento(int &token, std::vector<int> lineTokens,int &posi){
-    if(printDebug){ std::cout <<  "===============DeclaraProcedimento=============== \n";}
-    eat(PROCEDIMENTO,token,lineTokens, posi);
-    eat(IDENTIFICADOR,token,lineTokens, posi);
-    Parametros(token,lineTokens, posi);
-    eat(PV,token,lineTokens, posi);
-    DeclaraParametrosDeclaracoes(token,lineTokens, posi);
-    BlocoVariaveis(token,lineTokens, posi);
-    BlocoComandos(token,lineTokens, posi);
-    eat(PV,token,lineTokens, posi);
-    if(printDebug){ std::cout <<  "===============FIM-DeclaraProcedimento=============== \n";}
-}
 
 // Parametros → ( DeclaraIdentificador )
 // Parametros →
 void Parametros(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "===============Parametros=============== \n";}
-
-    switch(token) {
-        case AP: 
-            eat(AP,token,lineTokens, posi);// (
-            // DeclaraIdentificador(token,lineTokens, posi);
-            eat(FP,token,lineTokens, posi);// )
-        break;
-        default: // vazio
-            // std::string recived = getTokenName(token);
-            // std::string errMsg = "ERRO SINTATICO EM: " + recived + "ERRO PADRAO";
-            // error(errMsg); 
-        break;
-    }
-
     if(printDebug){ std::cout <<  "===============FIM-Parametros=============== \n";}
-}
-
-// DeclaraParametros → Declaracoes
-// DeclaraParametros →
-// Declaracoes → DeclaraVariaveis
-// Declaracoes → DeclaraTipo
-// Declaracoes → DeclaraVariaveis Declaracoes
-// Declaracoes → DeclaraTipo Declaracoes
-void DeclaraParametrosDeclaracoes(int &token, std::vector<int> lineTokens,int &posi){ // junção dos dois
-    if(printDebug){ std::cout <<  "===============DeclaraParametrosDeclaracoes=============== \n";}
-
-    if(token == INTEIRO || token == REAL ||  token == CARACTERE ||token ==  LOGICO || token == IDENTIFICADOR){
-            DeclaraVariaveis(token,lineTokens, posi);
-    }else{
-        // std::string recived = getTokenName(token);
-        // std::string errMsg = "ERRO SINTATICO EM: " + recived + "ERRO PADRAO";
-        // error(errMsg); 
-    }
-    if(printDebug){ std::cout <<  "===============FIM-DeclaraParametrosDeclaracoes=============== \n";}
-}
-
-//DeclaraVariaveis → TipoBasico : DeclaraIdentif icador ;
-void DeclaraVariaveis(int &token, std::vector<int> lineTokens,int &posi){
-    if(printDebug){ std::cout <<  "===============DeclaraVariaveis=============== \n";}
-
-    if(token == INTEIRO || token == REAL ||  token == CARACTERE ||token ==  LOGICO || token == IDENTIFICADOR){
-        TipoBasico(token,lineTokens, posi);
-        eat(DP,token,lineTokens, posi);//:
-        eat(PV,token,lineTokens, posi);//;
-    }else{
-        // std::string recived = getTokenName(token);
-        // std::string errMsg = "ERRO SINTATICO EM: " + recived + "ERRO PADRAO";
-        // error(errMsg);
-        // exit(1); 
-    }
-    if(printDebug){ std::cout <<  "===============FIM-DeclaraVariaveis=============== \n";}
 }
 
 
@@ -360,5 +393,6 @@ void TipoBasico(int &token, std::vector<int> lineTokens,int &posi){
             error(errMsg); 
         break;
     }
+
     if(printDebug){ std::cout <<  "===============FIM-TipoBasico=============== \n";}
 }
