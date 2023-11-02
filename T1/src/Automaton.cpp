@@ -9,7 +9,7 @@
 
 std::vector<int> allTokens;
 std::vector<int> allLines;
-// std::vector<int> allColumns;
+std::vector<int> allColumns;
 std::vector<std::string> allwords;
 void ignoreSpaces(std::string inputStr,int &posiString, int inputSize,int &columnPosi, int &whiteSpaces){
     if(inputStr[posiString] == ' '){

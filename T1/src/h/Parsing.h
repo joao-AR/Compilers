@@ -3,6 +3,7 @@
 #include <unordered_map>
 #ifndef Par
 #define Par
+    extern int posiAll;
     void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine,int &linePosi,int &columnPosi);
     void Programa(int &token, std::vector<int> lineTokens,int &posi);
     void BlocoVariaveis(int &token, std::vector<int> lineTokens,int &posi);
@@ -10,6 +11,7 @@
     void ProcedimentoFuncao(int &token, std::vector<int> lineTokens,int &posi);
     void DeclaraProcedimento(int &token, std::vector<int> lineTokens,int &posi);
     void DeclaraFuncao(int &token, std::vector<int> lineTokens,int &posi);
+    void Declaracoes(int &token, std::vector<int> lineTokens,int &posi);
     void TipoBasico(int &token, std::vector<int> lineTokens,int &posi);
     void DeclaraVariaveis(int &token, std::vector<int> lineTokens,int &posi);
     void DeclaraParametrosDeclaracoes(int &token, std::vector<int> lineTokens,int &posi);
@@ -44,7 +46,7 @@
     const int IDENTIFICADOR8 = 15 ; 
     const int IDENTIFICADOR9 = 16 ; 
     const int IDENTIFICADOR10 = 17 ; 
-    const int IDENTIFICADOR11  = 18 ; 
+    const int IDENTIFICADOR  = 18 ; 
     const int ALGORITIMO = 26 ; 
     const int ATE  = 28 ; 
     const int NREAL = 31 ; 
@@ -57,7 +59,7 @@
     const int DIV  = 46 ; 
     const int ENQUANTO  = 53 ; 
     const int ENTAO = 56 ; 
-    const int IDENTIFICADOR = 57 ; 
+    const int IDENTIFICADOR15 = 57 ; 
     const int FACA  = 60 ; 
     const int FALSO = 63 ; 
     const int VIRGULA = 64 ; 

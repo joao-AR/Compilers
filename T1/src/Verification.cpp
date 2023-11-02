@@ -119,8 +119,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
         return true;
     }
 
-    while(posi <= wordSize){
-        columnPosi++;
+    while(posi <= wordSize){ 
         if(isCharAccepted(word[posi])){
             inputColumn = getInputColumn(word[posi]);
             currentState = getNewCurrentState(currentState,inputColumn,automaton);
@@ -146,8 +145,8 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
                 //printOutput(output,lastFinal);
                 allTokens.push_back(lastFinal);
                 allLines.push_back(linePosi);
-                allwords.push_back(word);
-                // allColumns.push_back(columnPosi - whiteSpaces);
+                allwords.push_back(output);
+                allColumns.push_back(columnPosi-1);
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
                 wordAccepted = true;
             }else if(currentState == 0 && lastFinal == 0){
@@ -156,6 +155,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             }else{
                 output = auxOutput;
                 newWord = true;
+                columnPosi++;
                 posi++;
             }
             
@@ -164,23 +164,26 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
                 currentState = 0 ;
                 if(currentState == 0 && lastFinal != 0){
                     //printOutput(output,lastFinal);
-                    wordAccepted = true;
-                    break;
+                    allTokens.push_back(lastFinal);
+                    allLines.push_back(linePosi);
+                    allwords.push_back(output);
+                    allColumns.push_back(columnPosi-1);
+                    return true;
+                    // break;
                 }
                 
             }else{
                 std::cout << "ERRO LEXICO. Linha: " << linePosi << " Coluna: " << columnPosi-1 << " -> " << "'" << word[posi]<<"'"; // ERRO char não aceito 
                 return false;
             }
-            posi++;
         }
         //std::cout << output << "\n";
     }
     if(wordAccepted){
         allTokens.push_back(lastFinal);
         allLines.push_back(linePosi);
-        allwords.push_back(word);
-        // allColumns.push_back(columnPosi);
+        allwords.push_back(output);
+        allColumns.push_back(columnPosi-1);
     }
     //std::cout <<"\n";
     return wordAccepted;

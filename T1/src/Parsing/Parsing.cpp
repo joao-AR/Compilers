@@ -7,28 +7,29 @@
 
 const bool printDebug = false;
 int err = 0;
-
+int posiAll;
 void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine,int &linePosi,int &columnPosi){
+    posiAll = 0;
     std::cout << "\n -------------------\n";
     for (size_t i = 0; i < allTokens.size(); i++) {
             std::cout << allTokens[i] << " ";
     }
     
-    std::cout <<  "\n";
+    // std::cout <<  "\n";
     
-    for (size_t i = 0; i < allLines.size(); i++) {
-            std::cout << allLines[i] << " ";
-    }
-    std::cout <<  "\n";
+    // for (size_t i = 0; i < allLines.size(); i++) {
+    //         std::cout << allLines[i] << " ";
+    // }
+    // std::cout <<  "\n";
     // for (size_t i = 0; i < allColumns.size(); i++) {
     //         std::cout << allColumns[i] << " ";
     // }
-
-    for (size_t i = 0; i < allwords.size(); i++) {
-            std::cout << allwords[i] << " ";
-    }
+    // std::cout <<  "\n";
+    // for (size_t i = 0; i < allwords.size(); i++) {
+    //         std::cout << allwords[i] << " ";
+    // }
     
-    int posiTokens = 1;
+    int posiTokens = 0;
     Programa(allTokens[0],allTokens,posiTokens);
 
     if(err == 0 ){
@@ -49,6 +50,7 @@ int getToken(std::vector<int> lineTokens,int &posi){
     //if(printDebug){ std::cout <<  "===============GETTOKEN=============== \n";}
     posi++; // vai para a proxima posi do vetor
     //if(printDebug){ std::cout <<  "===============FIM-GETTOKEN=============== \n";}
+    std::cout << "POSI >" << posi << '\n';
     return lineTokens[posi];
 }
 
@@ -71,15 +73,14 @@ void eat(int expetedToken , int &inputToken,std::vector<int> lineTokens,int &pos
     }else{ // Caso não for o token esperado vai se impressa uma msg de erro
         std::string recived = getTokenName(inputToken);
         std::string expected = getTokenName(expetedToken);
-        std::string LineErr = std::to_string(allLines[0]);
-        // std::string ColumnErr = std::to_string(allColumns[4]);
-        std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + "Coluna: 1 -> " + "'" + allwords[0] + "'";
+        std::string LineErr = std::to_string(allLines[posiAll]);
+        std::string ColumnErr = std::to_string(allColumns[posiAll]);
+        std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + " Coluna: " + ColumnErr + " -> " + "'" + allwords[posiAll] + "'";
         error(errMsg);
-        return;
+        exit(1);
     }
-
+    posiAll++;
     if(printDebug){ std::cout <<  "===============FIM-EAT=============== \n";}
-
 }
 
 
@@ -88,20 +89,18 @@ void Programa(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "\n===============PROGRAMA=============== \n";}
     
     eat(ALGORITIMO,token,lineTokens, posi);
-    // eat(IDENTIFICADOR,token,lineTokens, posi); 
-    // eat(PV,token,lineTokens, posi); // ;
-    // BlocoVariaveis(token,lineTokens, posi);
-    // //ProcedimentoFuncao(token,lineTokens, posi);
-    // // BlocoComandos();
-    // eat(PONTO,token,lineTokens, posi); 
-
-    // if(printDebug){ std::cout <<  "==============FIM-PROGRAMA===============\n";}
+    eat(IDENTIFICADOR,token,lineTokens, posi); 
+    eat(PV,token,lineTokens, posi); // ; 
+    BlocoVariaveis(token,lineTokens, posi);
+    //ProcedimentoFuncao(token,lineTokens, posi);
+    // BlocoComandos();
+    eat(PONTO,token,lineTokens, posi); 
+    posiAll++;
+    if(printDebug){ std::cout <<  "==============FIM-PROGRAMA===============\n";}
 }
 
 //BlocoVariaveis → variaveis Declaracoes
 //BlocoVariaveis →
-void Declaracoes(int &token, std::vector<int> lineTokens,int &posi);
-
 void BlocoVariaveis(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "===============BlocoVariaveis=============== \n";}
     switch (token){
@@ -113,7 +112,7 @@ void BlocoVariaveis(int &token, std::vector<int> lineTokens,int &posi){
         //BlocoVariaveis →
         break;
     }
-    
+    posiAll++;
     if(printDebug){ std::cout <<  "==============FIM-BlocoVariaveis===============\n";}
 
 }
@@ -141,8 +140,13 @@ void Declaracoes(int &token, std::vector<int> lineTokens,int &posi){
             Declaracoes(token,lineTokens, posi); // Declaracoes → DeclaraVariaveis Declaracoes
         } 
     }else{
-        //Todo Imprime ERRO
+        std::string LineErr = std::to_string(allLines[posiAll]);
+        std::string ColumnErr = std::to_string(allColumns[posiAll]);
+        std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + " Coluna: " + ColumnErr + " -> " + "'" + allwords[posiAll] + "'";
+        error(errMsg);
+        exit(1);
     }
+    posiAll++;
 }
 
 // DeclaraTipo → tipo identificador = VetorMatriz [ Dimensao ] TipoBasico ;
@@ -156,6 +160,7 @@ void DeclaraTipo(int &token, std::vector<int> lineTokens,int &posi){
     eat(FC,token,lineTokens, posi);// ]
     TipoBasico(token,lineTokens, posi);
     eat(PV,token,lineTokens, posi);// ;
+    posiAll++;
 }
 
 //VetorMatriz → vetor
@@ -166,8 +171,13 @@ void VetorMatriz(int &token, std::vector<int> lineTokens,int &posi){
     }else if(token == MATRIZ){
         eat(MATRIZ,token,lineTokens, posi);
     }else{
-        //Todo ERRO
+        std::string LineErr = std::to_string(allLines[posiAll]);
+        std::string ColumnErr = std::to_string(allColumns[posiAll]);
+        std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + " Coluna: " + ColumnErr + " -> " + "'" + allwords[posiAll] + "'";
+        error(errMsg);
+        exit(1);
     }
+    posiAll++;
 }
 
 //Dimensao → numero inteiro : numero inteiro
@@ -181,6 +191,7 @@ void Dimensao(int &token, std::vector<int> lineTokens,int &posi){
         eat(VIRGULA,token,lineTokens, posi);
         Dimensao(token,lineTokens, posi);
     }
+    posiAll++;
 }
 
 //DeclaraVariaveis → TipoBasico : DeclaraIdentificador ;
@@ -193,17 +204,21 @@ void DeclaraVariaveis(int &token, std::vector<int> lineTokens,int &posi){
         DeclaraIdentificador(token,lineTokens, posi);
         eat(PV,token,lineTokens, posi);//;
     }else{
-        // std::string recived = getTokenName(token);
-        // std::string errMsg = "ERRO SINTATICO EM: " + recived + "ERRO PADRAO";
-        // error(errMsg);
-        // exit(1); 
+        std::string LineErr = std::to_string(allLines[posiAll]);
+        std::string ColumnErr = std::to_string(allColumns[posiAll]);
+        std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + " Coluna: " + ColumnErr + " -> " + "'" + allwords[posiAll] + "'";
+        error(errMsg);
+        exit(1); 
     }
+    posiAll++;
     if(printDebug){ std::cout <<  "===============FIM-DeclaraVariaveis=============== \n";}
 }
 
 // DeclaraIdentificador → identificador
 // DeclaraIdentificador → identificador , DeclaraIdentificador
 void DeclaraIdentificador(int &token, std::vector<int> lineTokens,int &posi){
+    if(printDebug){ std::cout <<  "===============DeclaraIdentificador=============== \n";}
+
     switch (token){
     case IDENTIFICADOR:
         eat(IDENTIFICADOR,token,lineTokens, posi);// DeclaraIdentificador → identificador
@@ -213,11 +228,17 @@ void DeclaraIdentificador(int &token, std::vector<int> lineTokens,int &posi){
             DeclaraIdentificador(token,lineTokens, posi);// DeclaraIdentificador → identificador , DeclaraIdentificador
         }
         break;
-    
     default:
-        //Todo ERRO
+        std::string LineErr = std::to_string(allLines[posiAll]);
+        std::string ColumnErr = std::to_string(allColumns[posiAll]);
+        std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + " Coluna: " + ColumnErr + " -> " + "'" + allwords[posiAll] + "'";
+        error(errMsg);
+        exit(1); 
         break;
     }
+    if(printDebug){ std::cout <<  "===============FIM-DeclaraIdentificador=============== \n";}
+
+    posiAll++;
 }
 // ProcedimentoFuncao → DeclaraProcedimento ProcedimentoFuncao
 // ProcedimentoFuncao → DeclaraFuncao ProcedimentoFuncao
@@ -225,24 +246,9 @@ void DeclaraIdentificador(int &token, std::vector<int> lineTokens,int &posi){
 void ProcedimentoFuncao(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "===============ProcedimentoFuncao=============== \n";}
     
-    switch(token) {
-        case PROCEDIMENTO:
-            eat(PROCEDIMENTO,token,lineTokens, posi); 
-            // DeclaraProcedimento(token,lineTokens, posi);
-            // ProcedimentoFuncao(token,lineTokens, posi);
-        break;
     
-        // case FUNCAO: 
-        //     DeclaraFuncao(token,lineTokens, posi);
-        //     ProcedimentoFuncao(token,lineTokens, posi);
-        //     break;
-        default: // vazio
-            // std::string recived = getTokenName(token);
-            // std::string errMsg = "ERRO SINTATICO EM: " + recived + "ERRO PADRAO";
-            // error(errMsg); 
-            break;
-    }
-
+    
+    posiAll++;
     if(printDebug){ std::cout <<  "==============FIM-ProcedimentoFuncao===============\n";}
 
 }
@@ -251,6 +257,9 @@ void ProcedimentoFuncao(int &token, std::vector<int> lineTokens,int &posi){
 // Parametros →
 void Parametros(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "===============Parametros=============== \n";}
+
+
+    posiAll++;
     if(printDebug){ std::cout <<  "===============FIM-Parametros=============== \n";}
 }
 
@@ -285,6 +294,6 @@ void TipoBasico(int &token, std::vector<int> lineTokens,int &posi){
             error(errMsg); 
         break;
     }
-
+    posiAll++;
     if(printDebug){ std::cout <<  "===============FIM-TipoBasico=============== \n";}
 }

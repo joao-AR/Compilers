@@ -264,9 +264,9 @@ int main(){
             if(lexicalError){
                 std::cout << "Lex error: line: " << line << "\n";
             }else{
-                if(haveNextLine == true){
-                    std::cout << "\n";
-                }
+                // if(haveNextLine == true){
+                //     std::cout << "\n";
+                // }
             }
             columnPosi = 1;
             linePosi++;
