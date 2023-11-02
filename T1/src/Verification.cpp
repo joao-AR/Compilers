@@ -47,7 +47,7 @@ void checkSingleLineComment(std::string word,int &posi,bool &lineComment,std::st
         lineComment = true;
         int currentState = 0;
         int lastFinal = 172;
-        printOutput(output,lastFinal);
+        //printOutput(output,lastFinal);
         
     }
 }
@@ -59,7 +59,7 @@ void blockCommentHandler(std::string word,int &posi,std::string output,bool &com
         }else if(word[posi] == '}'){
             commentSearch = false;
             int lastFinal = 170;
-            printOutput(output,lastFinal);
+            //printOutput(output,lastFinal);
             break;
         }
     } 
@@ -71,7 +71,7 @@ bool blockStringHandler(std::string word,int &posi,std::string output,bool &stri
         while(posi <= wordSize){
             if(word[posi] == '"'){
                 stringSearch = false;
-                printOutput(output,173);
+                //printOutput(output,173);
                 return true;
             }
             posi++;
@@ -79,7 +79,7 @@ bool blockStringHandler(std::string word,int &posi,std::string output,bool &stri
     }else if(type == 2 ){
         if(word[posi] == '"' && word[wordSize-1] == '"' && wordSize > 1 ){
             stringSearch = false;
-            printOutput(output,173);
+            //printOutput(output,173);
         }else{
             stringSearch = true;
         }
@@ -88,10 +88,9 @@ bool blockStringHandler(std::string word,int &posi,std::string output,bool &stri
     return false;
 }
 bool stringSearch = false;
-bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment,int &linePosi,int &columnPosi){
+bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment,int &linePosi,int &columnPosi, int whiteSpaces){
     //std::cout<< "Aword > " << word << "\n";
     bool wordAccepted = false;
-    int finalStates[] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,26,28,31,32,33,34,35,43,44,46,53,56,57,60,63,64,66,71,76,81,87,90,95,100,101,103,104,105,106,109,112,123,126,130,131,134,137,146,154,157,158,159,160,161,162,163,164,165,166,167,168,170,171,172,173};
 
     int wordSize = word.size();
     int posi = 0;
@@ -105,7 +104,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
     
     bool isFinalState;
     bool newWord = true;
-    
+ 
     checkSingleLineComment(word,posi,lineComment,output);
     if(lineComment){return true;}
     
@@ -144,7 +143,11 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             
             if(currentState == 0 && lastFinal != 0){
                 //std::cout << "Entrou currentState == 0 && lastFinal != 0\n";
-                printOutput(output,lastFinal);
+                //printOutput(output,lastFinal);
+                allTokens.push_back(lastFinal);
+                allLines.push_back(linePosi);
+                allwords.push_back(word);
+                // allColumns.push_back(columnPosi - whiteSpaces);
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
                 wordAccepted = true;
             }else if(currentState == 0 && lastFinal == 0){
@@ -160,7 +163,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             if(posi == wordSize){ 
                 currentState = 0 ;
                 if(currentState == 0 && lastFinal != 0){
-                    printOutput(output,lastFinal);
+                    //printOutput(output,lastFinal);
                     wordAccepted = true;
                     break;
                 }
@@ -172,6 +175,12 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             posi++;
         }
         //std::cout << output << "\n";
+    }
+    if(wordAccepted){
+        allTokens.push_back(lastFinal);
+        allLines.push_back(linePosi);
+        allwords.push_back(word);
+        // allColumns.push_back(columnPosi);
     }
     //std::cout <<"\n";
     return wordAccepted;

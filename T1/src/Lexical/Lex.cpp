@@ -10,11 +10,12 @@ bool lexAnalyser(std::string inputString,int automaton [][ALPHABET_LENGTH], bool
     std::string word = "";
     int posiString = 0;
     bool wordAccepted = false;
+    int whiteSapces = 0;
     while(posiString <= inputStrSize){
-        word = getWord(inputString,posiString,inputStrSize,columnPosi);
+        word = getWord(inputString,posiString,inputStrSize,columnPosi,whiteSapces);
         if(word != ""){
             //std::cout << "\n WORD ->" << word << "<-\n";
-            wordAccepted = checkWordAccepted(word,automaton,commentSearch,lineComment,linePosi,columnPosi);
+            wordAccepted = checkWordAccepted(word,automaton,commentSearch,lineComment,linePosi,columnPosi,whiteSapces);
             if(!wordAccepted){return false;}
         }
         posiString++;// pular o espaço entre as palavras

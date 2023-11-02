@@ -7,18 +7,25 @@
 #include "./h/Verification.h"
 #include "./h/Automaton.h"
 
-void ignoreSpaces(std::string inputStr,int &posiString, int inputSize,int &columnPosi){
+std::vector<int> allTokens;
+std::vector<int> allLines;
+// std::vector<int> allColumns;
+std::vector<std::string> allwords;
+void ignoreSpaces(std::string inputStr,int &posiString, int inputSize,int &columnPosi, int &whiteSpaces){
     if(inputStr[posiString] == ' '){
         while (inputStr[posiString] == ' '){
             posiString++;
             columnPosi++;// ignora espaços em braco mas ainda adiciona atualiza a coluna
+            whiteSpaces++;
         }
     }
+    //whiteSpaces = whiteSpaces + 2;
+
 }
-std::string getWord(std::string inputStr,int &posiString, int inputSize,int &columnPosi){
+std::string getWord(std::string inputStr,int &posiString, int inputSize,int &columnPosi,int &whiteSpaces){
     char c;
     std::string word;
-    ignoreSpaces(inputStr,posiString,inputSize,columnPosi); 
+    ignoreSpaces(inputStr,posiString,inputSize,columnPosi,whiteSpaces); 
     
     while (inputStr[posiString] != ' ' && posiString < inputSize){
         c = inputStr[posiString];
@@ -43,88 +50,8 @@ int getNewCurrentState(int stateLine,int inputColumn,int automaton [][ALPHABET_L
 }
 
 int getInputColumn(char c){
-
     std::unordered_map<char, int> charInputColumn = {
-        {'+',0},
-        {'-',1},
-        {'*',2},
-        {'/',3},
-        {'0',4},
-        {'1',5},
-        {'2',6},
-        {'3',7},
-        {'4',8},
-        {'5',9},
-        {'6',10},
-        {'7',11},
-        {'8',12},
-        {'9',13},
-        {'a',14},
-        {'b',15},
-        {'c',16},
-        {'d',17},
-        {'e',18},
-        {'f',19},
-        {'g',20},
-        {'h',21},
-        {'i',22},
-        {'j',23},
-        {'k',24},
-        {'l',25},
-        {'m',26},
-        {'n',27},
-        {'o',28},
-        {'p',29},
-        {'q',30},
-        {'r',31},
-        {'s',32},
-        {'t',33},
-        {'u',34},
-        {'v',35},
-        {'w',36},
-        {'x',37},
-        {'y',38},
-        {'z',39},
-        {'A',14},
-        {'B',15},
-        {'C',16},
-        {'D',17},
-        {'E',18},
-        {'F',19},
-        {'G',20},
-        {'H',21},
-        {'I',22},
-        {'J',23},
-        {'K',24},
-        {'L',25},
-        {'M',26},
-        {'N',27},
-        {'O',28},
-        {'P',29},
-        {'Q',30},
-        {'R',31},
-        {'S',32},
-        {'T',33},
-        {'U',34},
-        {'V',35},
-        {'W',36},
-        {'X',37},
-        {'Y',38},
-        {'Z',39},
-        {';',40},
-        {',',41},
-        {':',42},
-        {'.',43},
-        {'[',44},   
-        {']',45},
-        {'(',46}, 
-        {')',47},
-        {'=',48},
-        {'<',49},
-        {'>',50},
-        {'{',51},
-        {'}',52},
-        {'"',53},
+        {'+',0},{'-',1},{'*',2},{'/',3},{'0',4},{'1',5},{'2',6},{'3',7},{'4',8},{'5',9},{'6',10},{'7',11},{'8',12},{'9',13},{'a',14},{'b',15},{'c',16},{'d',17},{'e',18},{'f',19},{'g',20},{'h',21},{'i',22},{'j',23},{'k',24},{'l',25},{'m',26},{'n',27},{'o',28},{'p',29},{'q',30},{'r',31},{'s',32},{'t',33},{'u',34},{'v',35},{'w',36},{'x',37},{'y',38},{'z',39},{'A',14},{'B',15},{'C',16},{'D',17},{'E',18},{'F',19},{'G',20},{'H',21},{'I',22},{'J',23},{'K',24},{'L',25},{'M',26},{'N',27},{'O',28},{'P',29},{'Q',30},{'R',31},{'S',32},{'T',33},{'U',34},{'V',35},{'W',36},{'X',37},{'Y',38},{'Z',39},{';',40},{',',41},{':',42},{'.',43},{'[',44},   {']',45},{'(',46}, {')',47},{'=',48},{'<',49},{'>',50},{'{',51},{'}',52},{'"',53},
     };
 
     if (charInputColumn.find(c) != charInputColumn.end()) {
@@ -150,85 +77,16 @@ void resetStates(std::string &auxOut,std::string &output,int &currentState,int &
     }
 }
 
-std::string getToken (int lastFinal){
+std::string getTokenName (int lastFinal){
 
     std::unordered_map<int, std::string> lastFinalToken = {
-        {2,"IDENTIFICADOR"},
-        {4,"IDENTIFICADOR"},
-        {3,"NINTEIRO"},
-        {5,"IDENTIFICADOR"},
-        {6,"E"},
-        {7,"MAIS"},
-        {8,"IDENTIFICADOR"},
-        {9,"IDENTIFICADOR"},
-        {10,"IDENTIFICADOR"},
-        {11,"DP"},
-        {12,"PONTO"},
-        {13,"IGUAL"},
-        {14,"IDENTIFICADOR"},
-        {15,"IDENTIFICADOR"},
-        {16,"IDENTIFICADOR"},
-        {17,"IDENTIFICADOR"},
-        {18,"IDENTIFICADOR"}, 
-        {26,"ALGORITIMO"},
-        {28,"ATE"}, 
-        {31,"NREAL"},
-        {32,"MENOS"},
-        {33,"ASTERISCO"},
-        {34,"BARRA"},
-        {35,"PV"},
-        {43,"CARACTERE"}, 
-        {44,"DE"},
-        {46,"DIV"}, 
-        {53,"ENQUANTO"}, 
-        {56,"ENTAO"},
-        {57,"IDENTIFICADOR"},
-        {60,"FACA"}, 
-        {63,"FALSO"},
-        {64,"VIRGULA"},
-        {66,"FIM"},
-        {71,"FUNCAO"} ,
-        {76,"INICIO"},
-        {81,"INTEIRO"},
-        {87,"IMPRIMA"},
-        {90,"LEIA"},
-        {95,"LOGICO"}, 
-        {100,"MATRIZ"},
-        {101,"IDENTIFICADOR"},
-        {103,"NAO"},
-        {104,"IDENTIFICADOR"},
-        {105,"OU"},
-        {106,"IDENTIFICADOR"},
-        {109,"PARA"},
-        {112,"PASSO"},
-        {123,"PROCEDIMENTO"},
-        {126,"REAL"},
-        {130,"REPITA"},   
-        {131,"SE"},
-        {134,"SENAO"},
-        {137,"TIPO"},
-        {146,"VERDADEIRO"},
-        {154,"VARIAVEIS"}, 
-        {157,"VETOR"}, 
-        {158,"AC"},
-        {159,"FC"}, 
-        {160,"AP"},
-        {161,"FP"},
-        {162,"MENOR"},
-        {163,"DIFERENTE"},  
-        {164,"MENORIGUAL"},
-        {165,"ATRIBUICAO"},
-        {166,"MAIOR"},  
-        {167,"MAIORIGUAL"},
-        {170,"COMENTARIOBLOCO"},
-        {172,"COMENTARIOLINHA"},
-        {173,"STRING"},
+        {2,"IDENTIFICADOR"},{4,"IDENTIFICADOR"},{3,"NINTEIRO"},{5,"IDENTIFICADOR"},{6,"E"},{7,"MAIS"},{8,"IDENTIFICADOR"},{9,"IDENTIFICADOR"},{10,"IDENTIFICADOR"},{11,"DP"},{12,"PONTO"},{13,"IGUAL"},{14,"IDENTIFICADOR"},{15,"IDENTIFICADOR"},{16,"IDENTIFICADOR"},{17,"IDENTIFICADOR"},{18,"IDENTIFICADOR"}, {26,"ALGORITIMO"},{28,"ATE"}, {31,"NREAL"},{32,"MENOS"},{33,"ASTERISCO"},{34,"BARRA"},{35,"PV"},{43,"CARACTERE"}, {44,"DE"},{46,"DIV"}, {53,"ENQUANTO"}, {56,"ENTAO"},{57,"IDENTIFICADOR"},{60,"FACA"}, {63,"FALSO"},{64,"VIRGULA"},{66,"FIM"},{71,"FUNCAO"} ,{76,"INICIO"},{81,"INTEIRO"},{87,"IMPRIMA"},{90,"LEIA"},{95,"LOGICO"}, {100,"MATRIZ"},{101,"IDENTIFICADOR"},{103,"NAO"},{104,"IDENTIFICADOR"},{105,"OU"},{106,"IDENTIFICADOR"},{109,"PARA"},{112,"PASSO"},{123,"PROCEDIMENTO"},{126,"REAL"},{130,"REPITA"},   {131,"SE"},{134,"SENAO"},{137,"TIPO"},{146,"VERDADEIRO"},{154,"VARIAVEIS"}, {157,"VETOR"}, {158,"AC"},{159,"FC"}, {160,"AP"},{161,"FP"},{162,"MENOR"},{163,"DIFERENTE"},  {164,"MENORIGUAL"},{165,"ATRIBUICAO"},{166,"MAIOR"},  {167,"MAIORIGUAL"},{170,"COMENTARIOBLOCO"},{172,"COMENTARIOLINHA"},{173,"STRING"},
     };
     return lastFinalToken[lastFinal];
 }
 
 void printOutput(std::string output,int lastFinal){
-    std::string str = getToken(lastFinal);
+    std::string str = getTokenName(lastFinal);
     std::cout << str << " "; 
     // std::cout << "\n";
 }   

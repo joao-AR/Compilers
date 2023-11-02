@@ -6,68 +6,8 @@
 #include "./h/Verification.h"
 #include "./h/Lex.h"
 #include "./h/Parsing.h"
-    //8,15,16
-int main(){
-    /*Estado finais 
-        {3,"NINTEIRO"},
-        {6,"E"},
-        {7,"MAIS"},
-        {11,"DP"},
-        {12,"PONTO"},
-        {13,"IGUAL"},
-        {18,"IDENTIFICADOR"} , 
-        {26,"ALGORITIMO"},
-        {28,"ATE"}, 
-        {31,"NREAL"},
-        {32,"MENOS"},
-        {33,"ASTERISCO"},
-        {34,"BARRA"},
-        {35,"PV"},
-        {43,"CARACTERE"}, 
-        {44,"DE"},
-        {46,"DIV"}, 
-        {53,"ENQUANTO"}, 
-        {56,"ENTAO"}, 
-        {60,"FACA"}, 
-        {63,"FALSO"},
-        {64,"VIRGULA"},
-        {66,"FIM"},
-        {71,"FUNCAO"} ,
-        {76,"INICIO"},
-        {81,"INTEIRO"},
-        {87,"IMPRIMA"},
-        {90,"LEIA"},
-        {95,"LOGICO"}, 
-        {100,"MATRIZ"} ,
-        {103,"NAO"},
-        {105,"OU"},
-        {109,"PARA"},
-        {112,"PASSO"},
-        {123,"procedimento"},
-        {126,"REAL"},
-        {130,"REPITA"},   
-        {131,"SE"},
-        {134,"SENAO"},
-        {137,"TIPO"},
-        {146,"VERDADEIRO"},
-        {154,"VARIAVEIS"}, 
-        {157,"VETOR"}, 
-        {158,"AC"},
-        {159,"FC"}, 
-        {160,"AP"},
-        {161,"FP"},
-        {162,"MENOR"},
-        {163,"DIFERENTE"},  
-        {164,"MENORIGUAL"},
-        {165,"ATRIBUICAO"},
-        {166,"MAIOR"},  
-        {167,"MAIORIGUAL"},
-        {168,"ACH"},
-        {170,"COMENTARIO"},
-        {171,"FCH"},
-        {172, "COMENTARIO"}
 
-    */
+int main(){
     int automaton[][ALPHABET_LENGTH] = {
                    /* char de entrada
                    0   1   2   3   4   5   6   7   8   9   10  11  12  13  14 15  16  17  18  19  20  21  22   23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52
@@ -310,7 +250,7 @@ int main(){
 
     int linePosi = 1;
     int columnPosi = 1;
-    
+
     while (true) {
         // Tenta ler uma linha da entrada padrão
         if (std::getline(std::cin, line)) {
@@ -324,7 +264,6 @@ int main(){
             if(lexicalError){
                 std::cout << "Lex error: line: " << line << "\n";
             }else{
-                parsing(line,automaton,haveNextLine,linePosi,columnPosi);
                 if(haveNextLine == true){
                     std::cout << "\n";
                 }
@@ -334,8 +273,8 @@ int main(){
             // Verifica se há mais uma linha disponível 
         } else {
             //std::cout << "Erro de leitura ou final do arquivo." << std::endl;
+            parsing(line,automaton,haveNextLine,linePosi,columnPosi);
             break;
         }
     }
-
 }
