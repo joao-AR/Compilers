@@ -143,10 +143,13 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
             if(currentState == 0 && lastFinal != 0){
                 //std::cout << "Entrou currentState == 0 && lastFinal != 0\n";
                 //printOutput(output,lastFinal);
-                allTokens.push_back(lastFinal);
-                allLines.push_back(linePosi);
-                allwords.push_back(output);
-                allColumns.push_back(columnPosi-1);
+                if(lastFinal != 171){
+
+                    allTokens.push_back(lastFinal);
+                    allLines.push_back(linePosi);
+                    allwords.push_back(output);
+                    allColumns.push_back(columnPosi-1);
+                }
                 resetStates(auxOutput,output,currentState,lastFinal,newWord,word[posi],0);
                 wordAccepted = true;
             }else if(currentState == 0 && lastFinal == 0){
@@ -164,10 +167,13 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
                 currentState = 0 ;
                 if(currentState == 0 && lastFinal != 0){
                     //printOutput(output,lastFinal);
-                    allTokens.push_back(lastFinal);
-                    allLines.push_back(linePosi);
-                    allwords.push_back(output);
-                    allColumns.push_back(columnPosi-1);
+                    if(lastFinal != 171){
+
+                        allTokens.push_back(lastFinal);
+                        allLines.push_back(linePosi);
+                        allwords.push_back(output);
+                        allColumns.push_back(columnPosi-1);
+                    }
                     return true;
                     // break;
                 }
@@ -180,10 +186,13 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
         //std::cout << output << "\n";
     }
     if(wordAccepted){
-        allTokens.push_back(lastFinal);
-        allLines.push_back(linePosi);
-        allwords.push_back(output);
-        allColumns.push_back(columnPosi-1);
+        if(lastFinal != 171){
+
+            allTokens.push_back(lastFinal);
+            allLines.push_back(linePosi);
+            allwords.push_back(output);
+            allColumns.push_back(columnPosi-1);
+        }
     }
     //std::cout <<"\n";
     return wordAccepted;

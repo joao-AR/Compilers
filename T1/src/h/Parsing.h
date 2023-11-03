@@ -8,6 +8,8 @@
     void Programa(int &token, std::vector<int> lineTokens,int &posi);
     void BlocoVariaveis(int &token, std::vector<int> lineTokens,int &posi);
     void BlocoComandos(int &token, std::vector<int> lineTokens,int &posi);
+    void Comandos (int &token, std::vector<int> lineTokens,int &posi);
+    void ListaComandos (int &token, std::vector<int> lineTokens,int &posi);
     void ProcedimentoFuncao(int &token, std::vector<int> lineTokens,int &posi);
     void DeclaraProcedimento(int &token, std::vector<int> lineTokens,int &posi);
     void DeclaraFuncao(int &token, std::vector<int> lineTokens,int &posi);
@@ -20,17 +22,23 @@
     void VetorMatriz(int &token, std::vector<int> lineTokens,int &posi);
     void Dimensao(int &token, std::vector<int> lineTokens,int &posi);
     void DeclaraIdentificador(int &token, std::vector<int> lineTokens,int &posi);
-    
+    void Parametros(int &token, std::vector<int> lineTokens,int &posi);
+    void DeclaraParametros(int &token, std::vector<int> lineTokens,int &posi);
     std::string getTokenName(int token);
-
+    void Termo(int &token, std::vector<int> lineTokens,int &posi);
+    void Variavel(int &token, std::vector<int> lineTokens,int &posi);
     void getLineTokens(std::string word,int automaton [][ALPHABET_LENGTH],std::vector<int> &lineTokens);
     int getToken(std::vector<int> lineTokens,int &posi);
+    void Expressao(int &token, std::vector<int> lineTokens,int &posi);
+    void ExpressaoSimples(int &token, std::vector<int> lineTokens,int &posi);
+    void Fator(int &token, std::vector<int> lineTokens,int &posi);
+    void ExprIter(int &token, std::vector<int> lineTokens,int &posi);
 
     int advance(std::vector<int>  lineTokens,int &posiLineTokens);
     void eat(int expetedToken , int &inputToken,std::vector<int> lineTokens,int &posiLineTokens);
     void error(std::string errMsg);
 
-    const int IDENTIFICADOR1 = 2  ; 
+    // const int IDENTIFICADOR1 = 2  ; 
     const int IDENTIFICADOR2 = 4  ; 
     const int NINTEIRO = 3  ; 
     const int IDENTIFICADOR3 = 5  ; 
@@ -45,7 +53,7 @@
     const int IDENTIFICADOR7 = 14 ; 
     const int IDENTIFICADOR8 = 15 ; 
     const int IDENTIFICADOR9 = 16 ; 
-    const int IDENTIFICADOR10 = 17 ; 
+    // const int IDENTIFICADOR10 = 17 ; 
     const int IDENTIFICADOR  = 18 ; 
     const int ALGORITIMO = 26 ; 
     const int ATE  = 28 ; 
@@ -59,7 +67,7 @@
     const int DIV  = 46 ; 
     const int ENQUANTO  = 53 ; 
     const int ENTAO = 56 ; 
-    const int IDENTIFICADOR15 = 57 ; 
+    // const int IDENTIFICADOR15 = 57 ; 
     const int FACA  = 60 ; 
     const int FALSO = 63 ; 
     const int VIRGULA = 64 ; 
@@ -71,9 +79,9 @@
     const int LEIA = 90 ; 
     const int LOGICO  = 95 ; 
     const int MATRIZ = 100; 
-    const int IDENTIFICADOR12 = 101; 
+    // const int IDENTIFICADOR12 = 101; 
     const int NAO = 103; 
-    const int IDENTIFICADOR13 = 104; 
+    // const int IDENTIFICADOR13 = 104; 
     const int OU = 105; 
     const int IDENTIFICADOR14 = 106; 
     const int PARA = 109; 
