@@ -5,7 +5,7 @@
 #include "../h/Verification.h"
 #include "../h/Automaton.h"
 
-bool lexAnalyser(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine,bool &commentSearch,bool &lineComment,int &linePosi,int &columnPosi){
+bool lexAnalyser(std::string inputString, bool haveNextLine,bool &commentSearch,bool &lineComment,int &linePosi,int &columnPosi){
     size_t inputStrSize = inputString.size();
     std::string word = "";
     int posiString = 0;
@@ -15,7 +15,7 @@ bool lexAnalyser(std::string inputString,int automaton [][ALPHABET_LENGTH], bool
         word = getWord(inputString,posiString,inputStrSize,columnPosi,whiteSapces);
         if(word != ""){
             //std::cout << "\n WORD ->" << word << "<-\n";
-            wordAccepted = checkWordAccepted(word,automaton,commentSearch,lineComment,linePosi,columnPosi,whiteSapces);
+            wordAccepted = checkWordAccepted(word,commentSearch,lineComment,linePosi,columnPosi,whiteSapces);
             if(!wordAccepted){return false;}
         }
         posiString++;// pular o espaço entre as palavras

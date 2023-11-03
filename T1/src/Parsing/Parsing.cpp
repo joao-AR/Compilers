@@ -5,7 +5,7 @@
 #include "../h/Automaton.h"
 #include "../h/Parsing.h"
 
-const bool printDebug = false;
+const bool printDebug = true;
 int err = 0;
 int posiAll;
 bool isTermo(int token);
@@ -32,7 +32,7 @@ bool isExpressao(int token){
     return isExpressaoSimples(token);
 }
 bool isIdentificador(int token){
-    if(token == 2 || token == 17  || token == 57 || token ==  101 ||   token ==  104|| token == 8  ||token == 9  ||token == 10 ||token == 14 ||token == 15 ||token == 16 ||token == 18 ||token ==  106 ){
+    if(token == 2 || token == 4 || token == 5||token == 17  || token == 57 || token ==  101 ||   token ==  104|| token == 8  ||token == 9  ||token == 10 ||token == 14 ||token == 15 ||token == 16 ||token == 18 ||token ==  106 ){
         return true;
     }
     return false;
@@ -56,7 +56,7 @@ bool isFator(int token){
 }
 bool isTermo(int token){ return isFator(token); }
 
-void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine,int &linePosi,int &columnPosi){
+void parsing(std::string inputString, bool haveNextLine,int &linePosi,int &columnPosi){
     posiAll = 0;
     std::cout << "\n -------------------\n";
     for (size_t i = 0; i < allTokens.size(); i++) {
@@ -78,7 +78,7 @@ void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool hav
     // }
     
     int posiTokens = 0;
-    // ListaComandos(allTokens[0],allTokens,posiTokens);
+    // DeclaraVariaveis(allTokens[0],allTokens,posiTokens);
     Programa(allTokens[0],allTokens,posiTokens);
 
     if(err == 0 ){
@@ -265,8 +265,10 @@ void DeclaraVariaveis(int &token, std::vector<int> lineTokens,int &posi){
         TipoBasico(token,lineTokens, posi);
         eat(DP,token,lineTokens, posi);//:
         DeclaraIdentificador(token,lineTokens, posi);
+        std::cout << "-----PV\n";
         eat(PV,token,lineTokens, posi);//;
     }else{
+        std::cout << "Erro DeclaraVariaveis\n";
         std::string LineErr = std::to_string(allLines[posiAll]);
         std::string ColumnErr = std::to_string(allColumns[posiAll]);
         std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + " Coluna: " + ColumnErr + " -> " + "'" + allwords[posiAll] + "'";
@@ -282,6 +284,7 @@ void DeclaraVariaveis(int &token, std::vector<int> lineTokens,int &posi){
 void DeclaraIdentificador(int &token, std::vector<int> lineTokens,int &posi){
     if(printDebug){ std::cout <<  "===============DeclaraIdentificador=============== \n";}
 
+        std::cout << "VIRGULA " << VIRGULA << " token " << token << " \n";
     if(isIdentificador(token)){
         token = 18;
         eat(IDENTIFICADOR,token,lineTokens, posi);// DeclaraIdentificador → identificador
@@ -290,6 +293,7 @@ void DeclaraIdentificador(int &token, std::vector<int> lineTokens,int &posi){
             DeclaraIdentificador(token,lineTokens, posi);// DeclaraIdentificador → identificador , DeclaraIdentificador
         }
     }else{
+        std::cout << "Erro DeclaraIdentificador\n";
         std::string LineErr = std::to_string(allLines[posiAll]);
         std::string ColumnErr = std::to_string(allColumns[posiAll]);
         std::string errMsg = "ERRO DE SINTAXE. Linha:" + LineErr + " Coluna: " + ColumnErr + " -> " + "'" + allwords[posiAll] + "'";

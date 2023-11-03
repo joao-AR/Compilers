@@ -4,7 +4,7 @@
 #ifndef Par
 #define Par
     extern int posiAll;
-    void parsing(std::string inputString,int automaton [][ALPHABET_LENGTH], bool haveNextLine,int &linePosi,int &columnPosi);
+    void parsing(std::string inputString, bool haveNextLine,int &linePosi,int &columnPosi);
     void Programa(int &token, std::vector<int> lineTokens,int &posi);
     void BlocoVariaveis(int &token, std::vector<int> lineTokens,int &posi);
     void BlocoComandos(int &token, std::vector<int> lineTokens,int &posi);
@@ -27,7 +27,7 @@
     std::string getTokenName(int token);
     void Termo(int &token, std::vector<int> lineTokens,int &posi);
     void Variavel(int &token, std::vector<int> lineTokens,int &posi);
-    void getLineTokens(std::string word,int automaton [][ALPHABET_LENGTH],std::vector<int> &lineTokens);
+    void getLineTokens(std::string word,std::vector<int> &lineTokens);
     int getToken(std::vector<int> lineTokens,int &posi);
     void Expressao(int &token, std::vector<int> lineTokens,int &posi);
     void ExpressaoSimples(int &token, std::vector<int> lineTokens,int &posi);

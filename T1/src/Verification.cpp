@@ -88,8 +88,8 @@ bool blockStringHandler(std::string word,int &posi,std::string output,bool &stri
     return false;
 }
 bool stringSearch = false;
-bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &commentSearch, bool &lineComment,int &linePosi,int &columnPosi, int whiteSpaces){
-    //std::cout<< "Aword > " << word << "\n";
+bool checkWordAccepted(std::string word,bool &commentSearch, bool &lineComment,int &linePosi,int &columnPosi, int whiteSpaces){
+    
     bool wordAccepted = false;
 
     int wordSize = word.size();
@@ -104,7 +104,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
     
     bool isFinalState;
     bool newWord = true;
- 
+
     checkSingleLineComment(word,posi,lineComment,output);
     if(lineComment){return true;}
     
@@ -122,7 +122,7 @@ bool checkWordAccepted(std::string word,int automaton [][ALPHABET_LENGTH],bool &
     while(posi <= wordSize){ 
         if(isCharAccepted(word[posi])){
             inputColumn = getInputColumn(word[posi]);
-            currentState = getNewCurrentState(currentState,inputColumn,automaton);
+            currentState = getNewCurrentState(currentState,inputColumn);
 
             isFinalState = std::find(std::begin(finalStates), std::end(finalStates), currentState) != std::end(finalStates);
             lastFinal = isFinalState ? currentState : lastFinal;
